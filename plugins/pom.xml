@@ -5,11 +5,29 @@
     <parent>
         <artifactId>marvin-skype-bot</artifactId>
         <groupId>net.sadovnikov.marvin-skype-bot</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>plugins</artifactId>
+    <packaging>pom</packaging>
 
+    <modules>
+        <module>echo-plugin</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>ro.fortsoft.pf4j</groupId>
+            <artifactId>pf4j</artifactId>
+            <version>0.13.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sadovnikov.marvin-skype-bot</groupId>
+            <artifactId>core</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>

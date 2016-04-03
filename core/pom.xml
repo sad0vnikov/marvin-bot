@@ -5,7 +5,7 @@
     <parent>
         <artifactId>marvin-skype-bot</artifactId>
         <groupId>net.sadovnikov.marvin-skype-bot</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -42,6 +42,12 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.fortsoft.pf4j</groupId>
+            <artifactId>pf4j</artifactId>
+            <version>0.13.1</version>
         </dependency>
 
     </dependencies>
