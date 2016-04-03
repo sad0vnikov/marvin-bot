@@ -17,7 +17,7 @@ public class EchoMessageHandler extends EventHandler<MessageEvent> {
     }
 
     public void handle(MessageEvent ev) {
-        System.out.println(ev.getMessage().getText());
+
         SentMessage message = new SentMessage();
 
         message.setRecepientId(ev.getMessage().getSenderId());
