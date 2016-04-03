@@ -9,15 +9,21 @@ import events.eventTypes.MessageEvent;
 import factories.Skype4jFactory;
 import factories.SkypeFactory;
 import messageSender.MessageSender;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Main {
 
+    final static String configPath = "../config/connection.properties";
+
     public static void main(String[] args) {
+
+        Logger logger = LogManager.getLogger("core-logger");
 
         ConfigLoader config;
         try {
-            config = new ConfigLoader("config/connection.properties");
-
+            config = new ConfigLoader(configPath);
+            logger.info("loaded config from " + configPath);
         } catch (ConfigException e) {
             System.out.println(e.getMessage());
             return;
@@ -26,12 +32,13 @@ public class Main {
         String skypeLogin    = config.getParam("login");
         String skypePassword = config.getParam("password");
         SkypeFactory skypeFactory = new Skype4jFactory(skypeLogin, skypePassword);
-
+        logger.info("logged in successfully (skype login " + skypeLogin +  ")");
         EventDispatcher dispatcher = skypeFactory.getEventDispatcher();
         MessageSender sender       = skypeFactory.getMessageSender();
         dispatcher.addListener(MessageEvent.class.getTypeName(), new MessageEventListener(sender));
 
         dispatcher.start();
+        logger.info("waiting for events...");
         try {
             dispatcher.join();
         } catch (InterruptedException e) {

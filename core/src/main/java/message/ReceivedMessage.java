@@ -16,4 +16,8 @@ public class ReceivedMessage extends Message{
     public String getChatId() {
         return this.chatId;
     }
+
+    public User getUser() {
+        return this.user;
+    }
 }

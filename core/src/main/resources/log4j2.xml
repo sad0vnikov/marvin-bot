@@ -7,7 +7,10 @@
     </Appenders>
 
     <Loggers>
-        <Root level="debug">
+        <Logger name="core-logger" level="debug">
+            <AppenderRef ref="Console" />
+        </Logger>
+        <Root level="error">
             <AppenderRef ref="Console" />
         </Root>
     </Loggers>
