@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Main {
 
-    final static String configPath = "../config/connection.properties";
+    final static String configPath = "config/connection.properties";
 
     public static void main(String[] args) {
 
@@ -25,7 +25,7 @@ public class Main {
             config = new ConfigLoader(configPath);
             logger.info("loaded config from " + configPath);
         } catch (ConfigException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             return;
         }
 
