@@ -1,15 +1,19 @@
 package message;
 
+import user.User;
+
 public class ReceivedMessage extends Message{
 
-    private String senderId;
+    private String chatId;
+    private User user;
 
-    public ReceivedMessage(String senderId, String text) {
-        this.text = text;
-        this.senderId = senderId;
+    public ReceivedMessage(String chatId, User user, String text) {
+        this.text   = text;
+        this.chatId = chatId;
+        this.user   = user;
     }
 
-    public String getSenderId() {
-        return this.senderId;
+    public String getChatId() {
+        return this.chatId;
     }
 }

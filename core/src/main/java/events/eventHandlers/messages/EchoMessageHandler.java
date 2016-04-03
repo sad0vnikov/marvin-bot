@@ -20,7 +20,7 @@ public class EchoMessageHandler extends EventHandler<MessageEvent> {
 
         SentMessage message = new SentMessage();
 
-        message.setRecepientId(ev.getMessage().getSenderId());
+        message.setRecepientId(ev.getMessage().getChatId());
         message.setText(ev.getMessage().getText());
         sender.sendMessage(message);
     }

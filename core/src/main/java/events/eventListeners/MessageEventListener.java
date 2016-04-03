@@ -14,6 +14,7 @@ public class MessageEventListener extends EventListener<MessageEvent> {
     }
 
     public void send(MessageEvent ev) {
+        String msgText = ev.getMessage().getText();
         new EchoMessageHandler(sender).handle(ev);
     }
 }

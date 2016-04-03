@@ -8,6 +8,7 @@ import com.samczsun.skype4j.events.chat.message.MessageReceivedEvent;
 import com.samczsun.skype4j.exceptions.ConnectionException;
 import events.EventDispatcher;
 import events.eventTypes.MessageEvent;
+import user.User;
 
 public class Skype4jEventDispatcher extends EventDispatcher {
 
@@ -27,13 +28,13 @@ public class Skype4jEventDispatcher extends EventDispatcher {
                 ReceivedMessage skype4jMessage = ev.getMessage();
                 String msgContent = skype4jMessage.getContent().asPlaintext();
                 skype4jMessage.getChat().getIdentity();
-                String senderId = skype4jMessage.getChat().getIdentity();
-                message.ReceivedMessage msg = new message.ReceivedMessage(senderId, msgContent);
+                String chatId = skype4jMessage.getChat().getIdentity();
+                User user = new User(skype4jMessage.getSender().getUsername());
+
+                message.ReceivedMessage msg = new message.ReceivedMessage(chatId, user, msgContent);
                 dispatch(new MessageEvent(msg));
             }
         });
-
-        System.out.println("Signed in, waiting for events");
 
         try {
             this.skype.subscribe();
