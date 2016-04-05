@@ -2,10 +2,10 @@ package net.sadovnikov.marvinbot.plugins;
 
 import com.google.inject.Inject;
 import ro.fortsoft.pf4j.Plugin;
-import events.eventHandlers.MessageEventHandler;
-import events.eventTypes.MessageEvent;
-import message.SentMessage;
-import messageSender.MessageSender;
+import net.sadovnikov.marvinbot.core.events.eventHandlers.MessageEventHandler;
+import net.sadovnikov.marvinbot.core.events.eventTypes.MessageEvent;
+import net.sadovnikov.marvinbot.core.message.SentMessage;
+import net.sadovnikov.marvinbot.core.messageSender.MessageSender;
 import ro.fortsoft.pf4j.Extension;
 import ro.fortsoft.pf4j.PluginWrapper;
 
