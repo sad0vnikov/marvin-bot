@@ -7,7 +7,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
+/**
+ * An abstract class which concrete implementation can dispatch any type of events bot's components can handle
+ */
 public abstract class EventDispatcher extends Thread {
 
     public HashMap<String, HashSet<EventListener>> listeners = new HashMap<>();

@@ -7,6 +7,9 @@ import com.samczsun.skype4j.exceptions.ConnectionException;
 import com.samczsun.skype4j.exceptions.InvalidCredentialsException;
 import com.samczsun.skype4j.exceptions.NotParticipatingException;
 
+/**
+ * This is a skype client implementation whilch uses Skype4j lib
+ */
 public class Skype4jClient extends SkypeClient {
 
     private Skype skype;
@@ -16,6 +19,7 @@ public class Skype4jClient extends SkypeClient {
 
     }
 
+    @Override
     public void connect() {
         try {
             skype.login();
@@ -25,6 +29,7 @@ public class Skype4jClient extends SkypeClient {
         }
     }
 
+    @Override
     public void setVisible()
     {
         try {

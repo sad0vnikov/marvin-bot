@@ -9,6 +9,10 @@ import events.eventDispatchers.Skype4jEventDispatcher;
 import messageSender.MessageSender;
 import messageSender.Skype4jMessageSender;
 
+
+/**
+ * Binds core bot components to their implementations which use Skype4j lib
+ */
 public class Skype4jInjector extends AbstractModule {
 
     Skype skype;
@@ -23,5 +27,6 @@ public class Skype4jInjector extends AbstractModule {
         bind(EventDispatcher.class).to(Skype4jEventDispatcher.class);
         bind(ContactManager.class).to(Skype4jContactManager.class);
         bind(Skype.class).toInstance(this.skype);
+
     }
 }

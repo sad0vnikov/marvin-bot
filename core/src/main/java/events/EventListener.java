@@ -4,8 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Базовый класс для объектов, подписывающихся на сообщения определённого типа
- * и отправляющий их EventHandler'ам
+ * Event Listener is an object which listens for events of some concrete type and passes them to Event Handlers
  *
  * @param <T>
  */

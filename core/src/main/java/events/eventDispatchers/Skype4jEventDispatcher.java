@@ -13,6 +13,10 @@ import events.EventDispatcher;
 import events.eventTypes.MessageEvent;
 import contact.Contact;
 
+/**
+ * An EventDispatcher implementation whilch is a wrapper for Skype4j event dispatcher.
+ * Dispatches any kind of skype events
+ */
 public class Skype4jEventDispatcher extends EventDispatcher {
 
     Skype skype;
