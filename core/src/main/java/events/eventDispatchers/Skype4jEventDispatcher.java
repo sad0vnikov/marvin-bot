@@ -1,19 +1,24 @@
 package events.eventDispatchers;
 
+import com.google.inject.Inject;
 import com.samczsun.skype4j.Skype;
 import com.samczsun.skype4j.chat.messages.ReceivedMessage;
 import com.samczsun.skype4j.events.EventHandler;
 import com.samczsun.skype4j.events.Listener;
 import com.samczsun.skype4j.events.chat.message.MessageReceivedEvent;
+import com.samczsun.skype4j.events.contact.ContactRequestEvent;
 import com.samczsun.skype4j.exceptions.ConnectionException;
+import contact.ContactManager;
 import events.EventDispatcher;
 import events.eventTypes.MessageEvent;
-import user.User;
+import contact.Contact;
 
 public class Skype4jEventDispatcher extends EventDispatcher {
 
     Skype skype;
 
+
+    @Inject
     public Skype4jEventDispatcher(Skype skype) {
         this.skype = skype;
     }
@@ -29,9 +34,10 @@ public class Skype4jEventDispatcher extends EventDispatcher {
                 String msgContent = skype4jMessage.getContent().asPlaintext();
                 skype4jMessage.getChat().getIdentity();
                 String chatId = skype4jMessage.getChat().getIdentity();
-                User user = new User(skype4jMessage.getSender().getUsername());
 
-                message.ReceivedMessage msg = new message.ReceivedMessage(chatId, user, msgContent);
+                String userName = skype4jMessage.getSender().getUsername();
+
+                message.ReceivedMessage msg = new message.ReceivedMessage(chatId, userName, msgContent);
                 dispatch(new MessageEvent(msg));
             }
         });

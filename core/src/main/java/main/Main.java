@@ -1,20 +1,17 @@
 package main;
 
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import config.ConfigException;
 import config.ConfigLoader;
 import events.EventDispatcher;
 import events.eventListeners.MessageEventListener;
 import events.eventTypes.MessageEvent;
 import factories.Skype4jFactory;
-import factories.SkypeFactory;
-import messageSender.MessageSender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ro.fortsoft.pf4j.DefaultPluginManager;
-import ro.fortsoft.pf4j.Plugin;
-import ro.fortsoft.pf4j.PluginManager;
-import ro.fortsoft.pf4j.PluginWrapper;
+import ro.fortsoft.pf4j.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +24,6 @@ public class Main {
 
         Logger logger = LogManager.getLogger("core-logger");
 
-        PluginManager pluginManager = loadPlugins(logger);
 
         ConfigLoader config;
         try {
@@ -40,11 +36,13 @@ public class Main {
 
         String skypeLogin    = config.getParam("login");
         String skypePassword = config.getParam("password");
-        SkypeFactory skypeFactory = new Skype4jFactory(skypeLogin, skypePassword);
+        Injector injector = Guice.createInjector(new Skype4jFactory(skypeLogin, skypePassword));
         logger.info("logged in successfully (skype login " + skypeLogin +  ")");
-        EventDispatcher dispatcher = skypeFactory.getEventDispatcher();
-        MessageSender sender       = skypeFactory.getMessageSender();
-        dispatcher.addListener(MessageEvent.class.getTypeName(), new MessageEventListener(pluginManager, sender));
+
+        EventDispatcher dispatcher = injector.getInstance(EventDispatcher.class);
+        PluginManager pluginManager = loadPlugins(logger, injector);
+
+        dispatcher.addListener(MessageEvent.class.getTypeName(), new MessageEventListener(pluginManager));
 
         dispatcher.start();
         logger.info("waiting for events...");
@@ -57,8 +55,24 @@ public class Main {
     }
 
 
-    private static PluginManager loadPlugins(Logger logger) {
-        PluginManager pluginManager = new DefaultPluginManager();
+    private static PluginManager loadPlugins(Logger logger, Injector injector) {
+
+        /**
+         * Overriding DefaultExtensionFactory so that we could inject modules in extensions
+         */
+        PluginManager pluginManager = new DefaultPluginManager() {
+            @Override
+            protected ExtensionFactory createExtensionFactory() {
+                return new DefaultExtensionFactory() {
+                    @Override
+                    public Object create(Class<?> extensionClass) {
+                        logger.debug("Create instance for extension '{}'", extensionClass.getName());
+                        return injector.getInstance(extensionClass);
+                    }
+                };
+            }
+        };
+
         pluginManager.loadPlugins();
         pluginManager.startPlugins();
 

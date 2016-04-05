@@ -1,5 +1,6 @@
 package messageSender;
 
+import com.google.inject.Inject;
 import com.samczsun.skype4j.Skype;
 import com.samczsun.skype4j.exceptions.ConnectionException;
 import com.samczsun.skype4j.formatting.Text;
@@ -10,6 +11,7 @@ public class Skype4jMessageSender extends MessageSender {
 
     Skype skype;
 
+    @Inject
     public Skype4jMessageSender(Skype skype) {
         this.skype = skype;
     }

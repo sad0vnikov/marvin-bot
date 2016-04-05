@@ -1,5 +1,6 @@
 package net.sadovnikov.marvinbot.plugins;
 
+import com.google.inject.Inject;
 import ro.fortsoft.pf4j.Plugin;
 import events.eventHandlers.MessageEventHandler;
 import events.eventTypes.MessageEvent;
@@ -19,13 +20,18 @@ public class EchoPlugin extends Plugin {
     @Extension
     public static class MessageHandler extends MessageEventHandler {
 
+        MessageSender messageSender;
+        @Inject
+        public MessageHandler(MessageSender messageSender) {
+            this.messageSender = messageSender;
+        }
+
         public void handle(MessageEvent ev) {
-            MessageSender sender = this.getMessageSender();
             SentMessage message = new SentMessage();
             message.setText(ev.getMessage().getText());
             message.setRecepientId(ev.getMessage().getChatId());
 
-            sender.sendMessage(message);
+            messageSender.sendMessage(message);
         }
     }
 
