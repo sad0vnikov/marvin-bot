@@ -1,6 +1,7 @@
 package main;
 
 
+import client.Skype4jClient;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import config.ConfigException;
@@ -8,7 +9,7 @@ import config.ConfigLoader;
 import events.EventDispatcher;
 import events.eventListeners.MessageEventListener;
 import events.eventTypes.MessageEvent;
-import factories.Skype4jFactory;
+import injection.Skype4jInjector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ro.fortsoft.pf4j.*;
@@ -34,9 +35,16 @@ public class Main {
             return;
         }
 
+
         String skypeLogin    = config.getParam("login");
         String skypePassword = config.getParam("password");
-        Injector injector = Guice.createInjector(new Skype4jFactory(skypeLogin, skypePassword));
+
+        Skype4jClient skypeClient = new Skype4jClient(skypeLogin, skypePassword);
+        Injector injector = Guice.createInjector(new Skype4jInjector(skypeClient.getSkype4jInstance()));
+
+        skypeClient.connect();
+        skypeClient.setVisible();
+
         logger.info("logged in successfully (skype login " + skypeLogin +  ")");
 
         EventDispatcher dispatcher = injector.getInstance(EventDispatcher.class);
