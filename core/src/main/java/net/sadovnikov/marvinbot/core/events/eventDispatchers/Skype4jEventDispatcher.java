@@ -7,8 +7,11 @@ import com.samczsun.skype4j.events.EventHandler;
 import com.samczsun.skype4j.events.Listener;
 import com.samczsun.skype4j.events.chat.message.MessageReceivedEvent;
 import com.samczsun.skype4j.exceptions.ConnectionException;
+import net.sadovnikov.marvinbot.core.contact.Contact;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
+import net.sadovnikov.marvinbot.core.events.eventTypes.ContactRequestEvent;
 import net.sadovnikov.marvinbot.core.events.eventTypes.MessageEvent;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * An EventDispatcher implementation whilch is a wrapper for Skype4j event dispatcher.
@@ -40,6 +43,16 @@ public class Skype4jEventDispatcher extends EventDispatcher {
 
                 net.sadovnikov.marvinbot.core.message.ReceivedMessage msg = new net.sadovnikov.marvinbot.core.message.ReceivedMessage(chatId, userName, msgContent);
                 dispatch(new MessageEvent(msg));
+            }
+
+            @EventHandler
+            public void onContactRequest(com.samczsun.skype4j.events.contact.ContactRequestEvent ev) {
+                try {
+                    Contact contact = new Contact(ev.getRequest().getSender().getUsername());
+                    dispatch(new ContactRequestEvent(contact));
+                } catch (ConnectionException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

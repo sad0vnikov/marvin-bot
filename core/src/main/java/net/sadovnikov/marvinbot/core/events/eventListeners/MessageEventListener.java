@@ -11,7 +11,6 @@ import java.util.List;
 
 public class MessageEventListener extends EventListener<MessageEvent> {
 
-    MessageSender sender;
     PluginManager pluginManager;
 
     public MessageEventListener(PluginManager pluginManager) {
@@ -22,7 +21,7 @@ public class MessageEventListener extends EventListener<MessageEvent> {
         String msgText = ev.getMessage().getText();
         String usrName = ev.getMessage().getSenderUsername();
 
-        LogManager.getLogger("core-logger").debug("[received net.sadovnikov.marvinbot.core.message]" + usrName + ": " + msgText);
+        LogManager.getLogger("core-logger").info("received new message from user " + usrName + ": " + msgText);
 
         List<MessageEventHandler> handlers =  pluginManager.getExtensions(MessageEventHandler.class);
 
