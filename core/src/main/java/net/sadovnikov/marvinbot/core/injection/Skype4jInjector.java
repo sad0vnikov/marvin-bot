@@ -5,9 +5,9 @@ import com.samczsun.skype4j.Skype;
 import net.sadovnikov.marvinbot.core.contact.ContactManager;
 import net.sadovnikov.marvinbot.core.contact.Skype4jContactManager;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
-import net.sadovnikov.marvinbot.core.events.eventDispatchers.Skype4jEventDispatcher;
-import net.sadovnikov.marvinbot.core.messageSender.MessageSender;
-import net.sadovnikov.marvinbot.core.messageSender.Skype4jMessageSender;
+import net.sadovnikov.marvinbot.core.events.event_dispatchers.Skype4jEventDispatcher;
+import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
+import net.sadovnikov.marvinbot.core.message_sender.Skype4jMessageSender;
 
 
 /**

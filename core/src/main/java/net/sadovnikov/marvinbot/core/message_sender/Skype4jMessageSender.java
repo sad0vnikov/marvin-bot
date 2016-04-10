@@ -1,4 +1,4 @@
-package net.sadovnikov.marvinbot.core.messageSender;
+package net.sadovnikov.marvinbot.core.message_sender;
 
 import com.google.inject.Inject;
 import com.samczsun.skype4j.Skype;

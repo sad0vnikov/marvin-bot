@@ -1,4 +1,4 @@
-package net.sadovnikov.marvinbot.core.messageSender;
+package net.sadovnikov.marvinbot.core.message_sender;
 
 import net.sadovnikov.marvinbot.core.message.SentMessage;
 

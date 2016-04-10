@@ -1,9 +1,8 @@
-package net.sadovnikov.marvinbot.core.events.eventListeners;
+package net.sadovnikov.marvinbot.core.events.event_listeners;
 
 import net.sadovnikov.marvinbot.core.events.EventListener;
-import net.sadovnikov.marvinbot.core.events.eventHandlers.MessageEventHandler;
-import net.sadovnikov.marvinbot.core.events.eventTypes.MessageEvent;
-import net.sadovnikov.marvinbot.core.messageSender.MessageSender;
+import net.sadovnikov.marvinbot.core.events.event_handlers.MessageEventHandler;
+import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import org.apache.logging.log4j.LogManager;
 import ro.fortsoft.pf4j.PluginManager;
 

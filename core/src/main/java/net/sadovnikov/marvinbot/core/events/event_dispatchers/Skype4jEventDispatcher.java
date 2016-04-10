@@ -1,4 +1,4 @@
-package net.sadovnikov.marvinbot.core.events.eventDispatchers;
+package net.sadovnikov.marvinbot.core.events.event_dispatchers;
 
 import com.google.inject.Inject;
 import com.samczsun.skype4j.Skype;
@@ -10,11 +10,10 @@ import com.samczsun.skype4j.events.chat.message.MessageReceivedEvent;
 import com.samczsun.skype4j.exceptions.ConnectionException;
 import net.sadovnikov.marvinbot.core.contact.Contact;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
-import net.sadovnikov.marvinbot.core.events.eventTypes.BotJoinedChatEvent;
-import net.sadovnikov.marvinbot.core.events.eventTypes.ContactRequestEvent;
-import net.sadovnikov.marvinbot.core.events.eventTypes.MessageEvent;
-import net.sadovnikov.marvinbot.core.events.eventTypes.UserJoinedChatEvent;
-import org.apache.logging.log4j.LogManager;
+import net.sadovnikov.marvinbot.core.events.event_types.BotJoinedChatEvent;
+import net.sadovnikov.marvinbot.core.events.event_types.ContactRequestEvent;
+import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
+import net.sadovnikov.marvinbot.core.events.event_types.UserJoinedChatEvent;
 
 /**
  * An EventDispatcher implementation whilch is a wrapper for Skype4j event dispatcher.

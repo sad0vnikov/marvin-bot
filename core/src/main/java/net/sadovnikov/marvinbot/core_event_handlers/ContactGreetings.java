@@ -2,10 +2,10 @@ package net.sadovnikov.marvinbot.core_event_handlers;
 
 import com.google.inject.Inject;
 import net.sadovnikov.marvinbot.core.contact.ContactManager;
-import net.sadovnikov.marvinbot.core.events.eventHandlers.ContactRequestEventHandler;
-import net.sadovnikov.marvinbot.core.events.eventTypes.ContactRequestEvent;
+import net.sadovnikov.marvinbot.core.events.event_handlers.ContactRequestEventHandler;
+import net.sadovnikov.marvinbot.core.events.event_types.ContactRequestEvent;
 import net.sadovnikov.marvinbot.core.message.SentMessage;
-import net.sadovnikov.marvinbot.core.messageSender.MessageSender;
+import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
 import ro.fortsoft.pf4j.Extension;
 
 @Extension
