@@ -5,12 +5,15 @@ import com.samczsun.skype4j.Skype;
 import com.samczsun.skype4j.chat.messages.ReceivedMessage;
 import com.samczsun.skype4j.events.EventHandler;
 import com.samczsun.skype4j.events.Listener;
+import com.samczsun.skype4j.events.chat.ChatJoinedEvent;
 import com.samczsun.skype4j.events.chat.message.MessageReceivedEvent;
 import com.samczsun.skype4j.exceptions.ConnectionException;
 import net.sadovnikov.marvinbot.core.contact.Contact;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
+import net.sadovnikov.marvinbot.core.events.eventTypes.BotJoinedChatEvent;
 import net.sadovnikov.marvinbot.core.events.eventTypes.ContactRequestEvent;
 import net.sadovnikov.marvinbot.core.events.eventTypes.MessageEvent;
+import net.sadovnikov.marvinbot.core.events.eventTypes.UserJoinedChatEvent;
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -52,6 +55,15 @@ public class Skype4jEventDispatcher extends EventDispatcher {
                     dispatch(new ContactRequestEvent(contact));
                 } catch (ConnectionException e) {
                     e.printStackTrace();
+                }
+            }
+
+            @EventHandler
+            public void onChatJoinEvent(ChatJoinedEvent ev) {
+                if (ev.getInitiator().equals(skype.getUsername())) {
+                    dispatch(new BotJoinedChatEvent(ev.getChat().getIdentity()));
+                } else {
+                    dispatch(new UserJoinedChatEvent(ev.getChat().getIdentity(), ev.getInitiator().getUsername()));
                 }
             }
         });
