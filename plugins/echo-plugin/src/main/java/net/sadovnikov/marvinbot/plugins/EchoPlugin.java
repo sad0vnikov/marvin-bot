@@ -1,8 +1,8 @@
 package net.sadovnikov.marvinbot.plugins;
 
 import com.google.inject.Inject;
+import net.sadovnikov.marvinbot.core.events.EventHandler;
 import ro.fortsoft.pf4j.Plugin;
-import net.sadovnikov.marvinbot.core.events.event_handlers.MessageEventHandler;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.message.SentMessage;
 import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
@@ -18,7 +18,7 @@ public class EchoPlugin extends Plugin {
     }
 
     @Extension
-    public static class MessageHandler extends MessageEventHandler {
+    public static class MessageHandler extends EventHandler<MessageEvent> {
 
         MessageSender messageSender;
         @Inject
