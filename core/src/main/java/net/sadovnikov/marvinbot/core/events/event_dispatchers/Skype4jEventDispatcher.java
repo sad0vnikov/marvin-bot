@@ -6,14 +6,14 @@ import com.samczsun.skype4j.chat.messages.ReceivedMessage;
 import com.samczsun.skype4j.events.EventHandler;
 import com.samczsun.skype4j.events.Listener;
 import com.samczsun.skype4j.events.chat.ChatJoinedEvent;
+import com.samczsun.skype4j.events.chat.ChatQuitEvent;
 import com.samczsun.skype4j.events.chat.message.MessageReceivedEvent;
 import com.samczsun.skype4j.exceptions.ConnectionException;
 import net.sadovnikov.marvinbot.core.contact.Contact;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
-import net.sadovnikov.marvinbot.core.events.event_types.BotJoinedChatEvent;
-import net.sadovnikov.marvinbot.core.events.event_types.ContactRequestEvent;
-import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
-import net.sadovnikov.marvinbot.core.events.event_types.UserJoinedChatEvent;
+import net.sadovnikov.marvinbot.core.events.event_types.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ro.fortsoft.pf4j.PluginManager;
 
 /**
@@ -42,6 +42,8 @@ public class Skype4jEventDispatcher extends EventDispatcher {
                 skype4jMessage.getChat().getIdentity();
                 String chatId = skype4jMessage.getChat().getIdentity();
 
+                LogManager.getLogger("core-logger").info("new message from " + chatId + ": " + msgContent);
+
                 String userName = skype4jMessage.getSender().getUsername();
 
                 net.sadovnikov.marvinbot.core.message.ReceivedMessage msg = new net.sadovnikov.marvinbot.core.message.ReceivedMessage(chatId, userName, msgContent);
@@ -52,6 +54,8 @@ public class Skype4jEventDispatcher extends EventDispatcher {
             public void onContactRequest(com.samczsun.skype4j.events.contact.ContactRequestEvent ev) {
                 try {
                     Contact contact = new Contact(ev.getRequest().getSender().getUsername());
+                    LogManager.getLogger("core-logger").info("new contact request from " + contact.getName());
+
                     dispatch(new ContactRequestEvent(contact));
                 } catch (ConnectionException e) {
                     e.printStackTrace();
@@ -60,11 +64,18 @@ public class Skype4jEventDispatcher extends EventDispatcher {
 
             @EventHandler
             public void onChatJoinEvent(ChatJoinedEvent ev) {
-                if (ev.getInitiator().equals(skype.getUsername())) {
-                    dispatch(new BotJoinedChatEvent(ev.getChat().getIdentity()));
-                } else {
-                    dispatch(new UserJoinedChatEvent(ev.getChat().getIdentity(), ev.getInitiator().getUsername()));
-                }
+                String chatId = ev.getChat().getIdentity();
+                String initiatorName = ev.getInitiator().getUsername();
+                dispatch(new BotJoinedChatEvent(chatId, initiatorName));
+                LogManager.getLogger("core-logger").info("joined chat " + chatId);
+            }
+
+            @EventHandler
+            public void onChatQuitEvent(ChatQuitEvent ev) {
+                String chatId = ev.getChat().getIdentity();
+                String initiatorName = ev.getInitiator().getUsername();
+                dispatch(new BotLeftChatEvent(chatId, initiatorName));
+                LogManager.getLogger("core-logger").info("left chat " + chatId);
             }
         });
 

@@ -1,14 +1,12 @@
 package net.sadovnikov.marvinbot.core.events.event_types;
 
-
 import net.sadovnikov.marvinbot.core.events.ChatEvent;
+import net.sadovnikov.marvinbot.core.events.Event;
 
-public class BotJoinedChatEvent extends ChatEvent {
+public class BotLeftChatEvent extends ChatEvent {
 
-
-    public BotJoinedChatEvent(String chatId, String initiatorUsername) {
+    public BotLeftChatEvent(String chatId, String initiatorUsername) {
         this.chatId = chatId;
         this.initiatorName = initiatorUsername;
     }
-
 }
