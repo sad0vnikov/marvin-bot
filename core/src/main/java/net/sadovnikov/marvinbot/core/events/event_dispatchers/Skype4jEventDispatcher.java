@@ -14,6 +14,7 @@ import net.sadovnikov.marvinbot.core.events.event_types.BotJoinedChatEvent;
 import net.sadovnikov.marvinbot.core.events.event_types.ContactRequestEvent;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.events.event_types.UserJoinedChatEvent;
+import ro.fortsoft.pf4j.PluginManager;
 
 /**
  * An EventDispatcher implementation whilch is a wrapper for Skype4j event dispatcher.

@@ -7,10 +7,6 @@ import com.google.inject.Injector;
 import net.sadovnikov.marvinbot.core.config.ConfigException;
 import net.sadovnikov.marvinbot.core.config.ConfigLoader;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
-import net.sadovnikov.marvinbot.core.events.event_listeners.ContactEventsListener;
-import net.sadovnikov.marvinbot.core.events.event_listeners.MessageEventListener;
-import net.sadovnikov.marvinbot.core.events.event_types.ContactRequestEvent;
-import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.injection.Skype4jInjector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,9 +47,7 @@ public class Main {
 
         EventDispatcher dispatcher = injector.getInstance(EventDispatcher.class);
         PluginManager pluginManager = loadPlugins(logger, injector);
-
-        dispatcher.addListener(MessageEvent.class.getTypeName(), new MessageEventListener(pluginManager));
-        dispatcher.addListener(ContactRequestEvent.class.getTypeName(), new ContactEventsListener(pluginManager));
+        dispatcher.setPluginManager(pluginManager);
 
         dispatcher.start();
         logger.info("waiting for net.sadovnikov.marvinbot.core.events...");

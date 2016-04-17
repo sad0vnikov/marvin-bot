@@ -1,9 +1,14 @@
 package net.sadovnikov.marvinbot.core.events;
 
+import com.google.inject.Inject;
+import com.sun.istack.internal.NotNull;
 import net.sadovnikov.marvinbot.core.exceptions.UnknownEventTypeException;
+import org.apache.logging.log4j.LogManager;
+import ro.fortsoft.pf4j.PluginManager;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,44 +16,27 @@ import java.util.Map;
  */
 public abstract class EventDispatcher extends Thread {
 
-    public HashMap<String, HashSet<EventListener>> listeners = new HashMap<>();
+    @NotNull
+    PluginManager pluginManager;
 
     protected void dispatch(Event ev) {
-        HashSet<EventListener> evListeners = listeners.get(ev.getClass().getCanonicalName());
-        if (evListeners == null) {
-            return;
-        }
-        for (EventListener listener : evListeners) {
-            listener.send(ev);
-        }
-    }
 
-    public void addListener(String eventType, EventListener listener) throws UnknownEventTypeException {
-
+        String eventHandlerClassname = "net.sadovnikov.marvinbot.core.events.event_handlers." + ev.getClass().getSimpleName() + "Handler";
         try {
-            Class eventClass = Class.forName(eventType);
-            if (!Event.class.isAssignableFrom(eventClass)) {
-                throw new UnknownEventTypeException("class " + eventType + " is not " + Event.class.getCanonicalName() + " subtype");
+            Class eventHandlerClass = Class.forName(eventHandlerClassname);
+            List<EventHandler> eventHandlers = pluginManager.getExtensions(eventHandlerClass);
+            for (EventHandler handler : eventHandlers) {
+                handler.handle(ev);
             }
-
-            HashSet<EventListener> evListeners = listeners.get(eventType);
-            if (evListeners == null) {
-                evListeners = new HashSet<>();
-
-                listeners.put(eventType, evListeners);
-            }
-
-            evListeners.add(listener);
 
         } catch (ClassNotFoundException e) {
-            throw new UnknownEventTypeException("Can't find Event " + eventType);
+            LogManager.getLogger("core-logger").error("No handler for " + ev.getClass().getName() + " found");
         }
     }
 
-    public void removeListener(EventListener listener) {
-
-        for (Map.Entry<String, HashSet<EventListener>> entry : listeners.entrySet()) {
-            entry.getValue().remove(listener);
-        }
+    public void setPluginManager(PluginManager pluginManager) {
+        this.pluginManager = pluginManager;
     }
+
+
 }
