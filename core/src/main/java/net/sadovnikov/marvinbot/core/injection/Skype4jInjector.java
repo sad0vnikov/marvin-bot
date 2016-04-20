@@ -9,6 +9,8 @@ import net.sadovnikov.marvinbot.core.events.event_dispatchers.Skype4jEventDispat
 import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
 import net.sadovnikov.marvinbot.core.message_sender.Skype4jMessageSender;
 
+import java.util.Locale;
+
 
 /**
  * Binds core bot components to their implementations which use Skype4j lib
@@ -27,6 +29,7 @@ public class Skype4jInjector extends AbstractModule {
         bind(EventDispatcher.class).to(Skype4jEventDispatcher.class);
         bind(ContactManager.class).to(Skype4jContactManager.class);
         bind(Skype.class).toInstance(this.skype);
+        bind(Locale.class).toInstance(new Locale("EN"));
 
     }
 }
