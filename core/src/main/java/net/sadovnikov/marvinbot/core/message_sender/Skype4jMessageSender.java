@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.samczsun.skype4j.Skype;
 import com.samczsun.skype4j.exceptions.ConnectionException;
 import com.samczsun.skype4j.formatting.Text;
+import net.sadovnikov.marvinbot.core.message.ReceivedMessage;
 import net.sadovnikov.marvinbot.core.message.SentMessage;
 
 public class Skype4jMessageSender extends MessageSender {
