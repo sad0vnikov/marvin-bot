@@ -29,8 +29,13 @@ public abstract class EventDispatcher extends Thread {
                 String genericTypeName = ReflectionHelper.getGenericParameterClass(clazz);
 
                 if (genericTypeName != null && genericTypeName.equals(ev.getClass().getName())) {
-                    LogManager.getLogger("core-logger").debug("handling " + ev.getClass().getName() + " to " + handler.getClass().getName());
-                    handler.handle(ev);
+                    for (EventFilter filter : ev.getFilters()) {
+                        if (!filter.filter(ev, handler)) {
+                            break;
+                        }
+                        LogManager.getLogger("core-logger").debug("handling " + ev.getClass().getName() + " to " + handler.getClass().getName());
+                        handler.handle(ev);
+                    }
                 }
 
             }
