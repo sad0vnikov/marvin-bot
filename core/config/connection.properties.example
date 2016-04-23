@@ -1,3 +1,4 @@
 #Skype connection properties
 login=bot
 password=password
+commandPrefix=!

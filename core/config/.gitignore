@@ -1,2 +1,2 @@
-net.sadovnikov.marvinbot.core.config/*.properties
+*.properties
 !connection.properties.example
