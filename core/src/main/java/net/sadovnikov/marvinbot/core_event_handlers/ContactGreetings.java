@@ -22,7 +22,7 @@ public class ContactGreetings extends EventHandler<ContactRequestEvent> {
     public ContactGreetings(ContactManager contactManager, MessageSender messageSender, Locale locale) {
         this.contactManager = contactManager;
         this.messageSender  = messageSender;
-        this.locData = ResourceBundle.getBundle("loc_data_main");
+        this.locData = ResourceBundle.getBundle("loc_data_main", locale);
     }
 
     @Override
