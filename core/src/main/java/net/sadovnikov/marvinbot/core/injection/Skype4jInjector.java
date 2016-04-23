@@ -29,7 +29,5 @@ public class Skype4jInjector extends AbstractModule {
         bind(EventDispatcher.class).to(Skype4jEventDispatcher.class);
         bind(ContactManager.class).to(Skype4jContactManager.class);
         bind(Skype.class).toInstance(this.skype);
-        bind(Locale.class).toInstance(new Locale("EN"));
-
     }
 }

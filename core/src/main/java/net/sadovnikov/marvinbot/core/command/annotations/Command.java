@@ -1,4 +1,4 @@
-package net.sadovnikov.marvinbot.core.events.annotations;
+package net.sadovnikov.marvinbot.core.command.annotations;
 
 import java.lang.annotation.*;
 
