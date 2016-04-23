@@ -7,6 +7,7 @@ import com.google.inject.Injector;
 import net.sadovnikov.marvinbot.core.config.ConfigException;
 import net.sadovnikov.marvinbot.core.config.ConfigLoader;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
+import net.sadovnikov.marvinbot.core.injection.PluginManagerInjector;
 import net.sadovnikov.marvinbot.core.injection.Skype4jInjector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +39,10 @@ public class Main {
         String skypePassword = config.getParam("password");
 
         Skype4jClient skypeClient = new Skype4jClient(skypeLogin, skypePassword);
-        Injector injector = Guice.createInjector(new Skype4jInjector(skypeClient.getSkype4jInstance()));
+        Injector injector = Guice.createInjector(
+                new Skype4jInjector(skypeClient.getSkype4jInstance()),
+                new PluginManagerInjector()
+        );
 
         skypeClient.connect();
         skypeClient.setVisible();
@@ -46,8 +50,7 @@ public class Main {
         logger.info("logged in successfully (skype login " + skypeLogin +  ")");
 
         EventDispatcher dispatcher = injector.getInstance(EventDispatcher.class);
-        PluginManager pluginManager = loadPlugins(logger, injector);
-        dispatcher.setPluginManager(pluginManager);
+        injector.getInstance(PluginLoader.class).loadPlugins();
 
         dispatcher.start();
         logger.info("waiting for net.sadovnikov.marvinbot.core.events...");
@@ -59,41 +62,5 @@ public class Main {
 
     }
 
-
-    private static PluginManager loadPlugins(Logger logger, Injector injector) {
-
-        /**
-         * Overriding DefaultExtensionFactory so that we could inject modules in extensions
-         */
-        PluginManager pluginManager = new DefaultPluginManager() {
-            @Override
-            protected ExtensionFactory createExtensionFactory() {
-                return new DefaultExtensionFactory() {
-                    @Override
-                    public Object create(Class<?> extensionClass) {
-                        logger.debug("Create instance for extension '{}'", extensionClass.getName());
-                        return injector.getInstance(extensionClass);
-                    }
-                };
-            }
-        };
-
-        pluginManager.loadPlugins();
-        pluginManager.startPlugins();
-
-        List<String> pluginNames = new ArrayList<>();
-        for (PluginWrapper plugin: pluginManager.getStartedPlugins()) {
-           pluginNames.add(plugin.getPlugin().getClass().getCanonicalName());
-        }
-
-        logger.info("Run PluginManager in {} mode", pluginManager.getRuntimeMode().toString());
-        if (pluginNames.size() > 0) {
-            logger.info("Loaded {} plugins: {}", pluginNames.size(), String.join(", ", pluginNames));
-        } else {
-            logger.info("Didn't find any plugins");
-        }
-
-        return pluginManager;
-    }
 
 }

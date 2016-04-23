@@ -3,6 +3,7 @@ package net.sadovnikov.marvinbot.core.events;
 import com.google.inject.Inject;
 import com.sun.istack.internal.NotNull;
 import net.sadovnikov.marvinbot.core.exceptions.UnknownEventTypeException;
+import net.sadovnikov.marvinbot.core.main.PluginLoader;
 import net.sadovnikov.marvinbot.helpers.ReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import ro.fortsoft.pf4j.PluginManager;
@@ -16,10 +17,12 @@ import java.util.*;
  */
 public abstract class EventDispatcher extends Thread {
 
-    @NotNull
-    PluginManager pluginManager;
+    @Inject
+    PluginLoader pluginLoader;
 
     protected void dispatch(Event ev) {
+
+        PluginManager pluginManager = pluginLoader.getPluginManager();
 
         try {
             Class eventHandlerClass = Class.forName("net.sadovnikov.marvinbot.core.events.EventHandler");
@@ -39,10 +42,6 @@ public abstract class EventDispatcher extends Thread {
 
 
 
-    }
-
-    public void setPluginManager(PluginManager pluginManager) {
-        this.pluginManager = pluginManager;
     }
 
 
