@@ -43,7 +43,8 @@ public class Main {
         Injector injector = Guice.createInjector(
                 new Skype4jInjector(skypeClient.getSkype4jInstance()),
                 new PluginManagerInjector(),
-                new ConfigInjector(config)
+                new ConfigInjector(config),
+                new net.sadovnikov.marvinbot.core.injection.Db()
         );
 
         skypeClient.connect();

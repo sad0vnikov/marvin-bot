@@ -18,7 +18,7 @@ public class ConfigInjector  extends AbstractModule {
 
     public void configure() {
         bind(Locale.class).toInstance(new Locale("EN"));
-
+        bindConstant().annotatedWith(Names.named("redisHost")).to(cfg.getParam("redisHost"));
         bindConstant().annotatedWith(Names.named("commandPrefix")).to(cfg.getParam("commandPrefix"));
     }
 }

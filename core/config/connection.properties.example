@@ -2,3 +2,4 @@
 login=bot
 password=password
 commandPrefix=!
+redisHost=localhost
