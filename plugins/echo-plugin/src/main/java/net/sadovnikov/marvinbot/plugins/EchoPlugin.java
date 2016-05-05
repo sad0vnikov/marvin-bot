@@ -1,9 +1,6 @@
 package net.sadovnikov.marvinbot.plugins;
 
 import com.google.inject.Inject;
-import net.sadovnikov.marvinbot.core.command.Command;
-import net.sadovnikov.marvinbot.core.command.CommandExecutor;
-import net.sadovnikov.marvinbot.core.db.dao.PluginOption;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.message.SentMessage;

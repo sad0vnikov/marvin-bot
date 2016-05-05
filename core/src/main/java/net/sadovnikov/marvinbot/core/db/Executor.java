@@ -14,8 +14,9 @@ public class Executor {
         this.conn = conn;
     }
 
-    public void set(String key, String value) {
+    public Void set(String key, String value) {
         conn.set(key, value);
+        return (Void) null;
     }
 
     public String get(String key) {
@@ -26,28 +27,32 @@ public class Executor {
         return conn.keys(pattern);
     }
 
-    public void del(String key) {
+    public Void del(String key) {
         conn.del(key);
+        return (Void) null;
     }
 
     public long incr(String key) {
         return conn.incr(key);
     }
 
-    public void hdel(String hash, String key) {
+    public Void hdel(String hash, String key) {
         conn.hdel(hash, key);
+        return (Void) null;
     }
 
     public long hincrBy(String hash, String key, long inc) {
         return conn.hincrBy(hash, key, inc);
     }
 
-    public void hset(String hash, String key, String value) {
+    public Void hset(String hash, String key, String value) {
         conn.hset(hash, key, value);
+        return (Void) null;
     }
 
-    public void hmset(String hash, Map<String,String> values) {
+    public Void hmset(String hash, Map<String,String> values) {
         conn.hmset(hash, values);
+        return (Void) null;
     }
 
 

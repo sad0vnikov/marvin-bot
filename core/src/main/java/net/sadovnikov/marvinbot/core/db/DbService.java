@@ -1,5 +1,6 @@
 package net.sadovnikov.marvinbot.core.db;
 
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -10,6 +11,7 @@ public class DbService {
 
     JedisPool pool;
 
+    @Inject
     public DbService(@Named("redisHost") String redisHost) {
         pool = new JedisPool(new JedisPoolConfig(), redisHost);
     }
