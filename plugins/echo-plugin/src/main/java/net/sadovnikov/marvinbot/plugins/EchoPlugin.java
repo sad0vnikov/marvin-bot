@@ -1,11 +1,14 @@
 package net.sadovnikov.marvinbot.plugins;
 
 import com.google.inject.Inject;
+import net.sadovnikov.marvinbot.core.command.Command;
+import net.sadovnikov.marvinbot.core.command.CommandExecutor;
+import net.sadovnikov.marvinbot.core.db.dao.PluginOption;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
-import ro.fortsoft.pf4j.Plugin;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.message.SentMessage;
 import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
+import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import ro.fortsoft.pf4j.Extension;
 import ro.fortsoft.pf4j.PluginWrapper;
 
@@ -13,18 +16,14 @@ import ro.fortsoft.pf4j.PluginWrapper;
 
 public class EchoPlugin extends Plugin {
 
+    @Inject MessageSender messageSender;
+
     public EchoPlugin(PluginWrapper wrapper) {
         super(wrapper);
     }
 
     @Extension
-    public static class MessageHandler extends EventHandler<MessageEvent> {
-
-        MessageSender messageSender;
-        @Inject
-        public MessageHandler(MessageSender messageSender) {
-            this.messageSender = messageSender;
-        }
+    public class MessageHandler extends EventHandler<MessageEvent> {
 
         public void handle(MessageEvent ev) {
             SentMessage message = new SentMessage();
@@ -34,6 +33,5 @@ public class EchoPlugin extends Plugin {
             messageSender.sendMessage(message);
         }
     }
-
 
 }

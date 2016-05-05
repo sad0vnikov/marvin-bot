@@ -2,10 +2,15 @@ package net.sadovnikov.marvinbot.core.main;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import net.sadovnikov.marvinbot.core.db.DbException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.plugins.*;
 import ro.fortsoft.pf4j.*;
+import ro.fortsoft.pf4j.Plugin;
+import ro.fortsoft.pf4j.PluginFactory;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +18,13 @@ public class PluginLoader {
 
     private PluginManager pluginManager;
     private Logger logger;
+    private Injector injector;
+
 
     @Inject
     public PluginLoader(Injector injector) {
+
+        this.injector = injector;
 
         logger = LogManager.getLogger("core-logger");
 
@@ -25,13 +34,13 @@ public class PluginLoader {
         PluginManager pluginManager = new DefaultPluginManager() {
             @Override
             protected ExtensionFactory createExtensionFactory() {
-                return new DefaultExtensionFactory() {
-                    @Override
-                    public Object create(Class<?> extensionClass) {
-                        logger.debug("Create instance for extension '{}'", extensionClass.getName());
-                        return injector.getInstance(extensionClass);
-                    }
-                };
+
+                return new GuiceExtensionFactory();
+            }
+
+            @Override
+            protected PluginFactory createPluginFactory() {
+                return new GuicePluginFactory();
             }
         };
 
@@ -59,5 +68,50 @@ public class PluginLoader {
         return pluginManager;
 
     }
+
+    private class GuicePluginFactory extends DefaultPluginFactory {
+        @Override
+        public Plugin create(PluginWrapper pluginWrapper) {
+            Plugin plugin = super.create(pluginWrapper);
+            if (plugin != null) {
+                injector.injectMembers(plugin);
+            }
+
+            return plugin;
+        }
+    }
+
+
+    private class GuiceExtensionFactory extends DefaultExtensionFactory {
+        @Override
+        public Object create(Class<?> extensionClass) {
+            logger.debug("Create instance for extension '{}'", extensionClass.getName());
+            boolean isMember    = extensionClass.isMemberClass();
+            boolean isNotStatic = !Modifier.isStatic(extensionClass.getModifiers());
+            if (isMember && isNotStatic) {
+                Class pluginClass = extensionClass.getDeclaringClass();
+                try {
+                    Plugin plugin = getPluginByClass(pluginClass);
+                    return extensionClass.getDeclaredConstructor(pluginClass).newInstance(plugin);
+                } catch (Exception e) {
+                    logger.catching(e);
+                }
+            }
+            return injector.getInstance(extensionClass);
+        }
+
+        public Plugin getPluginByClass(Class clazz) throws Exception {
+            for (PluginWrapper wrapper : getPluginManager().getPlugins()) {
+                Plugin plugin = wrapper.getPlugin();
+                if (plugin.getClass().equals(clazz)) {
+                    return plugin;
+                }
+            }
+
+            throw new PluginException();
+        }
+    }
+
+
 
 }
