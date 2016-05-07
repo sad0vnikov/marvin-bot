@@ -92,7 +92,9 @@ public class PluginLoader {
                 Class pluginClass = extensionClass.getDeclaringClass();
                 try {
                     Plugin plugin = getPluginByClass(pluginClass);
-                    return extensionClass.getDeclaredConstructor(pluginClass).newInstance(plugin);
+                    Object extensionInstance = extensionClass.getDeclaredConstructor(pluginClass).newInstance(plugin);
+                    injector.injectMembers(extensionInstance);
+                    return extensionInstance;
                 } catch (Exception e) {
                     logger.catching(e);
                 }

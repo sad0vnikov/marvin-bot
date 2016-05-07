@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
+import net.sadovnikov.marvinbot.core.plugin.PluginException;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -17,10 +18,10 @@ public abstract class CommandExecutor extends EventHandler<MessageEvent> {
 
     private CommandParser parser;
 
-    @Inject protected Injector injector;
+    @Inject Injector injector;
     @Inject Locale locale;
 
-    public final void handle(MessageEvent ev) {
+    public final void handle(MessageEvent ev) throws PluginException {
         CommandParser parser = injector.getInstance(CommandParser.class);
         Command cmd = parser.parse(ev.getMessage().getText());
         String annotatedCommand = this.getClass().getAnnotation(net.sadovnikov.marvinbot.core.command.annotations.Command.class).value();
@@ -29,11 +30,11 @@ public abstract class CommandExecutor extends EventHandler<MessageEvent> {
         }
     }
 
-    public abstract void execute(Command cmd, MessageEvent ev);
+    public abstract void execute(Command cmd, MessageEvent ev) throws PluginException;
 
     public String getHelp() {
         ResourceBundle locData = ResourceBundle.getBundle("loc_data_main", locale);
-        return locData.getString("noHelpAvailable");
+        return locData.getString("noHelpAvailableForCommand");
     }
 
 }

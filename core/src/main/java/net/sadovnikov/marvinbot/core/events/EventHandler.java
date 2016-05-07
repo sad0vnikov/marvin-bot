@@ -1,5 +1,6 @@
 package net.sadovnikov.marvinbot.core.events;
 
+import net.sadovnikov.marvinbot.core.plugin.PluginException;
 import ro.fortsoft.pf4j.ExtensionPoint;
 
 /**
@@ -11,6 +12,6 @@ import ro.fortsoft.pf4j.ExtensionPoint;
  */
 public abstract class EventHandler<T extends Event> implements ExtensionPoint {
 
-    public abstract void handle(T ev);
+    public abstract void handle(T ev) throws PluginException;
 
 }
