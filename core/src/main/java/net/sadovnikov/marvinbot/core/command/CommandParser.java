@@ -2,6 +2,7 @@ package net.sadovnikov.marvinbot.core.command;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import net.sadovnikov.marvinbot.core.message.ReceivedMessage;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.Arrays;
@@ -33,5 +34,13 @@ public class CommandParser {
         }
 
         return null;
+    }
+
+    public boolean getIsCommand(String message) {
+        return parse(message) != null;
+    }
+
+    public boolean getIsCommand(ReceivedMessage msg) {
+        return getIsCommand(msg.getText());
     }
 }

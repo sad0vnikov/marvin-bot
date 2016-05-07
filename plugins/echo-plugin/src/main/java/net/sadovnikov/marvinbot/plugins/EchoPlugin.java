@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.sun.corba.se.impl.activation.CommandHandler;
 import net.sadovnikov.marvinbot.core.command.CommandExecutor;
+import net.sadovnikov.marvinbot.core.command.CommandParser;
 import net.sadovnikov.marvinbot.core.command.annotations.Command;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
 import net.sadovnikov.marvinbot.core.events.event_types.CommandEvent;
@@ -33,7 +34,8 @@ public class EchoPlugin extends Plugin {
 
         public void handle(MessageEvent ev) throws PluginException {
 
-            if (getOption("enableEcho", "off").equals("on")) {
+            CommandParser commandParser = injector.getInstance(CommandParser.class);
+            if (getOption("enableEcho", "off").equals("on") && !commandParser.getIsCommand(ev.getMessage())) {
                 SentMessage message = new SentMessage();
                 message.setText(ev.getMessage().getText());
                 message.setRecepientId(ev.getMessage().getChatId());
