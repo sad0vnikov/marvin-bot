@@ -3,3 +3,4 @@ login=bot
 password=password
 commandPrefix=!
 redisHost=localhost
+admins=skype_username1,skype_username2
