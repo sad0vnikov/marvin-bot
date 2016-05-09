@@ -7,10 +7,13 @@ import net.sadovnikov.marvinbot.core.db.Executor;
 
 import java.util.Map;
 
+/**
+ * A global plugin option
+ */
 public class PluginOption {
 
     final String HASH_BASENAME = "marvin_plugin_options";
-    private String pluginName;
+    protected String pluginName;
 
     @Inject
     private DbService db;

@@ -1,13 +1,10 @@
 package net.sadovnikov.marvinbot.plugins;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import com.sun.corba.se.impl.activation.CommandHandler;
 import net.sadovnikov.marvinbot.core.command.CommandExecutor;
 import net.sadovnikov.marvinbot.core.command.CommandParser;
 import net.sadovnikov.marvinbot.core.command.annotations.Command;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
-import net.sadovnikov.marvinbot.core.events.event_types.CommandEvent;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.message.SentMessage;
 import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
@@ -35,7 +32,7 @@ public class EchoPlugin extends Plugin {
         public void handle(MessageEvent ev) throws PluginException {
 
             CommandParser commandParser = injector.getInstance(CommandParser.class);
-            if (getOption("enableEcho", "off").equals("on") && !commandParser.getIsCommand(ev.getMessage())) {
+            if (getGlobalOption("enableEcho", "off").equals("on") && !commandParser.getIsCommand(ev.getMessage())) {
                 SentMessage message = new SentMessage();
                 message.setText(ev.getMessage().getText());
                 message.setRecepientId(ev.getMessage().getChatId());
@@ -60,10 +57,10 @@ public class EchoPlugin extends Plugin {
             }
 
             if ( args[0].equals("on")) {
-                setOption("enableEcho", "on");
+                setGlobalOption("enableEcho", "on");
                 messageSender.reply(ev.getMessage(), "Echoing is turned on!");
             } else if ( args[0].equals("off")) {
-                setOption("enableEcho", "off");
+                setGlobalOption("enableEcho", "off");
                 messageSender.reply(ev.getMessage(), "Echoing is turned off");
             }
         }
