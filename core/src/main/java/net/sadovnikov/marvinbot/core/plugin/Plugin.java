@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.sadovnikov.marvinbot.core.db.DbException;
 import net.sadovnikov.marvinbot.core.db.repository.PluginChatOption;
-import net.sadovnikov.marvinbot.core.db.repository.PluginOption;
+import net.sadovnikov.marvinbot.core.db.repository.GlobalPluginOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ro.fortsoft.pf4j.PluginWrapper;
@@ -13,8 +13,8 @@ import java.util.Map;
 
 public abstract class Plugin extends ro.fortsoft.pf4j.Plugin {
 
-    private PluginOption pluginOptionRepository;
-    private Logger logger;
+    private GlobalPluginOption globalPluginOptionRepository;
+    protected Logger logger;
 
     protected Injector injector;
 
@@ -29,7 +29,7 @@ public abstract class Plugin extends ro.fortsoft.pf4j.Plugin {
 
     protected final String getGlobalOption(String name, String defaultValue) throws PluginException {
         try {
-            String value = getPluginOptionRepository().get(name);
+            String value = getGlobalPluginOptionRepository().get(name);
             if (value != null) {
                 return value;
             }
@@ -44,7 +44,7 @@ public abstract class Plugin extends ro.fortsoft.pf4j.Plugin {
 
     protected final Map<String, String> getGlobalOptions() throws PluginException {
         try {
-            return getPluginOptionRepository().getAll();
+            return getGlobalPluginOptionRepository().getAll();
         } catch (DbException e) {
             throw new PluginException(e);
 
@@ -53,7 +53,7 @@ public abstract class Plugin extends ro.fortsoft.pf4j.Plugin {
 
     protected final void setGlobalOption(String name, String value) throws PluginException {
         try {
-            getPluginOptionRepository().set(name, value);
+            getGlobalPluginOptionRepository().set(name, value);
         } catch (DbException e) {
             throw new PluginException(e);
         }
@@ -95,14 +95,14 @@ public abstract class Plugin extends ro.fortsoft.pf4j.Plugin {
         this.injector = injector;
     }
 
-    protected final PluginOption getPluginOptionRepository() {
+    protected final GlobalPluginOption getGlobalPluginOptionRepository() {
 
-        if (pluginOptionRepository == null) {
-            pluginOptionRepository = new PluginOption(getPluginName());
-            injector.injectMembers(pluginOptionRepository);
+        if (globalPluginOptionRepository == null) {
+            globalPluginOptionRepository = new GlobalPluginOption(getPluginName());
+            injector.injectMembers(globalPluginOptionRepository);
         }
 
-        return pluginOptionRepository;
+        return globalPluginOptionRepository;
     }
 
     protected final PluginChatOption getPluginChatOptionRepository(String chatId) {

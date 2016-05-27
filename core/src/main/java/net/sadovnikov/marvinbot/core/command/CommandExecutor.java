@@ -18,8 +18,9 @@ public abstract class CommandExecutor extends EventHandler<MessageEvent> {
 
     private CommandParser parser;
 
-    @Inject Injector injector;
-    @Inject Locale locale;
+    @Inject protected Injector injector;
+    @Inject protected Locale locale;
+    @Inject protected @Named("commandPrefix") String commandPrefix;
 
     public final void handle(MessageEvent ev) throws PluginException {
         CommandParser parser = injector.getInstance(CommandParser.class);
@@ -35,6 +36,13 @@ public abstract class CommandExecutor extends EventHandler<MessageEvent> {
     public String getHelp() {
         ResourceBundle locData = ResourceBundle.getBundle("loc_data_main", locale);
         return locData.getString("noHelpAvailableForCommand");
+    }
+
+    /**
+     * Returns usage example for command
+     */
+    public String getUsage() {
+        return "There is no usage example for this command.";
     }
 
 }

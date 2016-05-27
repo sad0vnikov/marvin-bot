@@ -2,6 +2,8 @@ package net.sadovnikov.marvinbot.core.db;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -9,24 +11,20 @@ import redis.clients.jedis.JedisPoolConfig;
 
 public class DbService {
 
-    JedisPool pool;
+    protected MongoClient client;
+    protected String databaseName;
 
     @Inject
-    public DbService(@Named("redisHost") String redisHost) {
-        pool = new JedisPool(new JedisPoolConfig(), redisHost);
+    public DbService(@Named("dbHost") String dbHost, @Named("dbPort") String dbPort) {
+        this.client = new MongoClient(dbHost, Integer.parseInt(dbPort));
     }
 
-    public Jedis getConnection() {
-        return pool.getResource();
+    @Inject
+    protected void setDatabaseName(@Named("dbName") String dbName) {
+        this.databaseName = dbName;
     }
 
-    public <T> T exec(DbCommand<T> cmd) throws DbException {
-        try (Jedis conn = getConnection()) {
-            Executor executor = new Executor(conn);
-            T value = cmd.execute(executor);
-
-            return value;
-        }
-
+    public MongoDatabase getDb() {
+        return client.getDatabase(databaseName);
     }
 }

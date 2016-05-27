@@ -2,5 +2,7 @@
 login=bot
 password=password
 commandPrefix=!
-redisHost=localhost
+dbHost=localhost
+dbPort=27017
+dbName=marvin-bot
 admins=skype_username1,skype_username2
