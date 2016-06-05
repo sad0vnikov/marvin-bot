@@ -14,6 +14,7 @@
 
     <modules>
         <module>echo-plugin</module>
+        <module>git-notifier-plugin</module>
     </modules>
 
     <dependencies>
