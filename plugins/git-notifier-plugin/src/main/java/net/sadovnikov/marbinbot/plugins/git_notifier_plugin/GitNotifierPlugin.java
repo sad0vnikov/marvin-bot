@@ -13,17 +13,13 @@ import net.sadovnikov.marvinbot.core.message.SentMessage;
 import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
 import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import ro.fortsoft.pf4j.Extension;
 import ro.fortsoft.pf4j.PluginWrapper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.util.*;
 
@@ -82,30 +78,40 @@ public class GitNotifierPlugin extends Plugin {
                 JSONObject obj = (JSONObject) jsonParser.parse(requestBody);
                 WebhookCatcher catcher = new BitbucketWebhookCatcher(obj);
                 if (catcher.getIsPushNotification()) {
-                    logger.info("got bitbucket push notification");
 
                     Map<String, String> pushInfo = catcher.getPushInfo();
+                    String repName = pushInfo.get("repository");
+                    logger.info("got bitbucket push notification for repository " + repName);
+
                     Commit[] commits = catcher.getPushedCommits();
                     String message = pushInfo.get("initiator") + " pushed ";
                     if (commits.length > 0) {
                         message += String.valueOf(commits.length) + " commits to " + pushInfo.get("repository") + ":\n";
                         for (int i = 0; i < commits.length; i++) {
-                            message += commits[i].getHash() + " " + commits[i].getUser() + " " + commits[i].getMessage() + "\n";
+                            message += commits[i].getHash() + " " + commits[i].getUser() + " | " + commits[i].getMessage() + "\n";
                         }
-                        SentMessage msgObj = new SentMessage();
-                        msgObj.setText(message);
-                        msgObj.setRecepientId("");
-                        messageSender.sendMessage(msgObj);
+
+                        for (String chatId : findChatswithOptionValues("repositories_to_notify", repName)) {
+                            SentMessage msgObj = new SentMessage();
+                            msgObj.setText(message);
+                            msgObj.setRecepientId(chatId);
+                            messageSender.sendMessage(msgObj);
+                        }
+
                     }
                 }
+                String responseBody = "<html><body>ok</body></html>";
+                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(httpExchange.getResponseBody()));
+                httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, responseBody.length());
+                out.write(responseBody);
+                out.flush();
+                httpExchange.close();
+
             } catch (Exception e) {
                 logger.catching(e);
             }
         }
 
-        private Set<String> getChatsToNotify(String repositoryName) {
-            return new HashSet<String>();
-        }
     }
 
     @Extension
@@ -155,8 +161,7 @@ public class GitNotifierPlugin extends Plugin {
 
         protected Set<String> getChatRepsList(String chatId) {
             try {
-                String strList = getChatOption(chatId, "repositories_to_notify", "");
-                return new HashSet<String>(Arrays.asList(strList.split(",")));
+                return new HashSet(getListChatOption(chatId, "repositories_to_notify"));
 
             } catch (PluginException e) {
                 logger.catching(e);
@@ -166,7 +171,7 @@ public class GitNotifierPlugin extends Plugin {
 
         protected void saveChatRepsList(String chatId, Set<String> list) {
             try {
-                setChatOption(chatId, "repositories_to_notify", String.join(",", list));
+                setChatOption(chatId, "repositories_to_notify", new ArrayList<>(list));
             } catch (PluginException e) {
                 logger.catching(e);
             }

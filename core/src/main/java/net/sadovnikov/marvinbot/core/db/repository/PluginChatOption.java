@@ -1,11 +1,14 @@
 package net.sadovnikov.marvinbot.core.db.repository;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import net.sadovnikov.marvinbot.core.db.DbService;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.eq;
+import java.util.*;
+
+import static com.mongodb.client.model.Filters.*;
 
 /**
  * A plugin option for concrete chat
@@ -19,8 +22,24 @@ public class PluginChatOption extends GlobalPluginOption {
         this.chatId = chatId;
     }
 
+    public Set<String> findChatswithOptionValues(String optionName, Object value) {
+
+        HashSet<String> list = new HashSet<>();
+        FindIterable result = getCollection().find(
+                and(eq("pluginName", pluginName), eq("name", optionName), eq("value", value))
+        );
+
+        Iterator resultIterator = result.iterator();
+        while (resultIterator.hasNext()) {
+            Document option = (Document) resultIterator.next();
+            list.add(option.getString("chatId"));
+        }
+
+        return list;
+    }
+
     @Override
-    protected Document createOption(String name, String value) {
+    protected Document createOption(String name, Object value) {
         Document doc = super.createOption(name, value);
         doc.put("chatId", chatId);
         return doc;
@@ -38,6 +57,7 @@ public class PluginChatOption extends GlobalPluginOption {
 
     @Override
     protected MongoCollection<Document> getCollection() {
+        DbService d = db;
         return db.getDb().getCollection("chat_plugin_options");
     }
 

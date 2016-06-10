@@ -1,11 +1,10 @@
 package net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers;
 
-import com.mongodb.util.JSON;
+import com.eclipsesource.json.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
 
 import java.util.*;
 
@@ -30,7 +29,7 @@ public class BitbucketWebhookCatcher extends WebhookCatcher {
             pushInfo.put("initiator", (String) userInfo.get("display_name"));
 
             JSONObject repositoryInfo = (JSONObject) request.get("repository");
-            pushInfo.put("repository", "http://bitbucket.org/" + repositoryInfo.get("full_name").toString());
+            pushInfo.put("repository", "https://bitbucket.org/" + repositoryInfo.get("full_name").toString());
 
         } catch (Exception e) {
             LogManager.getLogger("core-logger").catching(e);
@@ -64,7 +63,9 @@ public class BitbucketWebhookCatcher extends WebhookCatcher {
             while (commitsIterator.hasNext()) {
                 JSONObject commitJson = commitsIterator.next();
                 String commitHash = commitJson.get("hash").toString();
-                String commitAuthor = commitJson.get("author").toString();
+
+                JSONObject authorInfo = (JSONObject) commitJson.get("author");
+                String commitAuthor = authorInfo.get("username").toString();
                 String commitMessage = commitJson.get("message").toString();
 
                 Commit commit = new Commit(commitHash, commitAuthor, commitMessage);

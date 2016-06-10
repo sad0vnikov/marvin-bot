@@ -9,9 +9,8 @@ import net.sadovnikov.marvinbot.core.db.DbService;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import static com.mongodb.client.model.Filters.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+
+import java.util.*;
 
 public abstract class PluginOption {
 
@@ -22,7 +21,8 @@ public abstract class PluginOption {
     protected String pluginName;
 
 
-    protected abstract Document createOption(String name, String value);
+    protected abstract Document createOption(String name, Object value);
+
     protected abstract Bson makeSearchByNameQuery(String optName);
     protected Bson makeGetAllQuery() {
         return eq("pluginName", pluginName);
@@ -30,14 +30,18 @@ public abstract class PluginOption {
 
     protected abstract MongoCollection<Document> getCollection();
 
-
-    public void set(String name, String value) throws DbException {
+    /**
+     * @param name Option name
+     * @param value Option value
+     * @throws DbException
+     */
+    public void set(String name, Object value) throws DbException {
         Document doc = getCollection()
                 .find(makeSearchByNameQuery(name))
                 .first();
 
         if (doc != null) {
-            doc.put("value", value);
+            doc.append("value", value);
             getCollection().replaceOne(
                     eq("_id", doc.get("_id")),
                     doc
@@ -51,15 +55,21 @@ public abstract class PluginOption {
     }
 
     public String get(String name) throws DbException {
-        Document doc =  getCollection()
-                .find(makeSearchByNameQuery(name))
-                .first();
-
+        Document doc = getDocument(name);
         if (doc == null) {
             return null;
         }
 
-        return doc.get("value").toString();
+        return doc.getString(name);
+    }
+
+    public List<String> getValuesList(String name) throws DbException {
+        Document doc = getDocument(name);
+        if (doc == null) {
+            return null;
+        }
+
+        return doc.get(name, List.class);
     }
 
     public Map<String,String> getAll() throws DbException {
@@ -72,5 +82,13 @@ public abstract class PluginOption {
         }
 
         return result;
+    }
+
+    protected Document getDocument(String name) {
+        Document doc =  getCollection()
+                .find(makeSearchByNameQuery(name))
+                .first();
+
+        return doc;
     }
 }

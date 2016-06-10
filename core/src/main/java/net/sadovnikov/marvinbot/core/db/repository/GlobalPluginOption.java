@@ -1,15 +1,10 @@
 package net.sadovnikov.marvinbot.core.db.repository;
 
-import com.google.inject.Inject;
 import com.mongodb.client.MongoCollection;
-import net.sadovnikov.marvinbot.core.db.DbException;
-import net.sadovnikov.marvinbot.core.db.DbService;
 import org.bson.Document;
 import static com.mongodb.client.model.Filters.*;
 import org.bson.conversions.Bson;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+
 
 /**
  * A global plugin option
@@ -23,11 +18,11 @@ public class GlobalPluginOption extends PluginOption {
 
 
     @Override
-    protected Document createOption(String name, String value) {
+    protected Document createOption(String name, Object value) {
         Document doc = new Document();
-        doc.put("pluginName", pluginName);
-        doc.put("name", name);
-        doc.put("value", value);
+        doc.append("pluginName", pluginName);
+        doc.append("name", name);
+        doc.append("value", value);
 
         return doc;
     }
