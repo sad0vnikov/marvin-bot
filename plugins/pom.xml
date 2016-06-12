@@ -22,12 +22,14 @@
             <groupId>ro.fortsoft.pf4j</groupId>
             <artifactId>pf4j</artifactId>
             <version>0.13.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>net.sadovnikov.marvin-skype-bot</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>marvin-core</artifactId>
             <version>0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

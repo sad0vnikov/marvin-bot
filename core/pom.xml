@@ -9,10 +9,62 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>core</artifactId>
+    <artifactId>marvin-core</artifactId>
+
+    <properties>
+        <main.class>net.sadovnikov.marvinbot.core.main.Main</main.class>
+        <main.configFileName>connection.properties</main.configFileName>
+    </properties>
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>
+                            src/assembly/assembly.xml
+                        </descriptor>
+                    </descriptors>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>create workaround</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <tasks>
+
+                                <symlink link="${project.build.directory}/${project.name}-current" resource="${project.build.directory}/${project.name}-${project.version}"/>
+
+                                <!-- let's create a directory for plugins to make a build with plugins included -->
+                                <mkdir dir="${project.build.directory}/${project.name}-current/plugins"/>
+                                <mkdir dir="${project.build.directory}/${project.name}-current/config"/>
+
+                                <!-- let's copy properties files -->
+                                <copy file="${basedir}/config/${main.configFileName}" tofile="${project.build.directory}/${project.name}-current/config/${main.configFileName}"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -20,6 +72,20 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${main.class}</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+
                 </configuration>
             </plugin>
 
@@ -54,14 +120,6 @@
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
             <version>3.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>2.8.0</version>
-            <type>jar</type>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
