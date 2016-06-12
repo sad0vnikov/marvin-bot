@@ -5,10 +5,8 @@ import com.google.inject.Injector;
 import net.sadovnikov.marvinbot.core.db.DbException;
 import net.sadovnikov.marvinbot.core.db.repository.PluginChatOption;
 import net.sadovnikov.marvinbot.core.db.repository.GlobalPluginOption;
-import net.sadovnikov.marvinbot.core.db.repository.PluginOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.parser.ParseException;
 import ro.fortsoft.pf4j.PluginWrapper;
 
 import java.util.ArrayList;

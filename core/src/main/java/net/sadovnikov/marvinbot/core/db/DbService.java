@@ -4,9 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 
 public class DbService {

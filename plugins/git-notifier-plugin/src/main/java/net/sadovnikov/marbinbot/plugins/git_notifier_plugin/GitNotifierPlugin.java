@@ -1,7 +1,6 @@
 package net.sadovnikov.marbinbot.plugins.git_notifier_plugin;
 
 import com.google.inject.Inject;
-import com.sun.deploy.util.StringUtils;
 import com.sun.net.httpserver.*;
 import net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers.BitbucketWebhookCatcher;
 import net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers.Commit;

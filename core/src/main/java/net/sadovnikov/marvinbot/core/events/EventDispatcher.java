@@ -1,16 +1,12 @@
 package net.sadovnikov.marvinbot.core.events;
 
 import com.google.inject.Inject;
-import com.sun.istack.internal.NotNull;
-import net.sadovnikov.marvinbot.core.exceptions.UnknownEventTypeException;
 import net.sadovnikov.marvinbot.core.main.PluginLoader;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
 import net.sadovnikov.marvinbot.helpers.ReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import ro.fortsoft.pf4j.PluginManager;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
