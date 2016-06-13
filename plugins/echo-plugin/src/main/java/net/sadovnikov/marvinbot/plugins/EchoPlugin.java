@@ -32,7 +32,9 @@ public class EchoPlugin extends Plugin {
         public void handle(MessageEvent ev) throws PluginException {
 
             CommandParser commandParser = injector.getInstance(CommandParser.class);
-            if (getGlobalOption("enableEcho", "off").equals("on") && !commandParser.getIsCommand(ev.getMessage())) {
+            boolean isEchoingOn = getGlobalOption("enableEcho", "off").equals("on");
+            boolean isCommand   = commandParser.getIsCommand(ev.getMessage()); // is message a valid bot command
+            if (isEchoingOn && !isCommand) {
                 SentMessage message = new SentMessage();
                 message.setText(ev.getMessage().getText());
                 message.setRecepientId(ev.getMessage().getChatId());

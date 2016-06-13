@@ -60,7 +60,7 @@ public abstract class PluginOption {
             return null;
         }
 
-        return doc.getString(name);
+        return doc.getString("value");
     }
 
     public List<String> getValuesList(String name) throws DbException {
