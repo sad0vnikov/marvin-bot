@@ -6,6 +6,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import net.sadovnikov.marvinbot.core.config.ConfigException;
 import net.sadovnikov.marvinbot.core.config.ConfigLoader;
+import net.sadovnikov.marvinbot.core.db.DbService;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
 import net.sadovnikov.marvinbot.core.injection.PluginManagerInjector;
 import net.sadovnikov.marvinbot.core.injection.ConfigInjector;
@@ -27,14 +28,35 @@ public class Main {
 
 
         ConfigLoader config;
+        logger.debug("loging config at " + configPath);
         try {
             config = new ConfigLoader(configPath);
             logger.info("loaded net.sadovnikov.marvinbot.core.config from " + configPath);
         } catch (ConfigException e) {
             logger.error(e.getMessage());
+            System.exit(2);
             return;
         }
 
+        DbService dbService;
+        logger.debug("connecting to db");
+        try {
+            String dbHost = config.getParam("dbHost");
+            String dbPort = config.getParam("dbPort");
+            String dbName = config.getParam("dbName");
+            logger.debug("db host: " + dbHost);
+            logger.debug("db dbPort: " + dbPort);
+            logger.debug("using db: " + dbName);
+
+            dbService = new DbService(dbHost, dbPort, dbName);
+            dbService.ping();
+            logger.info("Connected to db on " + dbHost + ":" + dbPort);
+        } catch (Throwable e) {
+            logger.error("Cannot connect to db");
+            logger.catching(e);
+            System.exit(2);
+            return;
+        }
 
         String skypeLogin    = config.getParam("login");
         String skypePassword = config.getParam("password");
@@ -44,7 +66,7 @@ public class Main {
                 new Skype4jInjector(skypeClient.getSkype4jInstance()),
                 new PluginManagerInjector(),
                 new ConfigInjector(config),
-                new net.sadovnikov.marvinbot.core.injection.Db()
+                new net.sadovnikov.marvinbot.core.injection.Db(dbService)
         );
 
         skypeClient.connect();

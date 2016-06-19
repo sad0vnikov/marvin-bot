@@ -9,19 +9,27 @@ import com.mongodb.client.MongoDatabase;
 public class DbService {
 
     protected MongoClient client;
-    protected String databaseName;
+    protected String defaultDb;
 
-    @Inject
-    public DbService(@Named("dbHost") String dbHost, @Named("dbPort") String dbPort) {
+    public DbService(String dbHost, String dbPort, String defaultDb) {
         this.client = new MongoClient(dbHost, Integer.parseInt(dbPort));
+        this.defaultDb = defaultDb;
     }
 
-    @Inject
-    protected void setDatabaseName(@Named("dbName") String dbName) {
-        this.databaseName = dbName;
-    }
 
     public MongoDatabase getDb() {
+        return client.getDatabase(defaultDb);
+    }
+
+    public MongoDatabase getDb(String databaseName) {
         return client.getDatabase(databaseName);
+    }
+
+    public void ping() throws DbException {
+        try {
+            getDb();
+        } catch (Throwable e) {
+            throw new DbException(e);
+        }
     }
 }

@@ -7,7 +7,13 @@ import net.sadovnikov.marvinbot.core.db.DbService;
 
 public class Db extends AbstractModule {
 
+    private DbService dbService;
+
+    public Db(DbService dbService) {
+        this.dbService = dbService;
+    }
+
     public void configure() {
-        bind(DbService.class).in(Singleton.class);
+        bind(DbService.class).toInstance(dbService);
     }
 }
