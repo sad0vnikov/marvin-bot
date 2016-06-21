@@ -65,7 +65,8 @@ public class BitbucketWebhookCatcher extends WebhookCatcher {
                 String commitHash = commitJson.get("hash").toString();
 
                 JSONObject authorInfo = (JSONObject) commitJson.get("author");
-                String commitAuthor = authorInfo.get("username").toString();
+                JSONObject userInfo   = (JSONObject) authorInfo.get("user");
+                String commitAuthor = userInfo.get("username").toString();
                 String commitMessage = commitJson.get("message").toString();
 
                 Commit commit = new Commit(commitHash, commitAuthor, commitMessage);

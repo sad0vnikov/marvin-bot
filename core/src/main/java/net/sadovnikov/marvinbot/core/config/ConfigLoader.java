@@ -23,7 +23,11 @@ public class ConfigLoader {
 
     public String getParam(String name)
     {
-        return prop.getProperty(name);
+        String value = System.getenv(name); // every config param can be overrided by env param
+        if (value == null) {
+            value = prop.getProperty(name);
+        }
+        return value;
     }
 
 
