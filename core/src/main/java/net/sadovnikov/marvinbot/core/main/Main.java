@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Main {
 
-    final static String configPath = "config/connection.properties";
+    final static String configPath = "config/main.properties";
 
     public static void main(String[] args) {
 
@@ -41,9 +41,9 @@ public class Main {
         DbService dbService;
         logger.debug("connecting to db");
         try {
-            String dbHost = config.getParam("dbHost");
-            String dbPort = config.getParam("dbPort");
-            String dbName = config.getParam("dbName");
+            String dbHost = config.getParam("marvinBot.dbHost");
+            String dbPort = config.getParam("marvinBot.dbPort");
+            String dbName = config.getParam("marvinBot.dbName");
             logger.debug("db host: " + dbHost);
             logger.debug("db dbPort: " + dbPort);
             logger.debug("using db: " + dbName);
@@ -58,8 +58,10 @@ public class Main {
             return;
         }
 
-        String skypeLogin    = config.getParam("login");
-        String skypePassword = config.getParam("password");
+        String skypeLogin    = config.getParam("marvinBot.login");
+        String skypePassword = config.getParam("marvinBot.password");
+
+        logger.debug("connecting to Skype using login: " + skypeLogin);
 
         Skype4jClient skypeClient = new Skype4jClient(skypeLogin, skypePassword);
         Injector injector = Guice.createInjector(
