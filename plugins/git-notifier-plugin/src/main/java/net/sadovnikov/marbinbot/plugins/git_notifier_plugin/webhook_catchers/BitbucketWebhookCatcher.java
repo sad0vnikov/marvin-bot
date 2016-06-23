@@ -51,12 +51,12 @@ public class BitbucketWebhookCatcher extends WebhookCatcher {
         while (changesIterator.hasNext()) {
             JSONObject ch = changesIterator.next();
 
-            JSONObject newChanges = (JSONObject) ch.get("new");
-            if (newChanges == null) {
+            JSONArray commitsJsonArray = (JSONArray) ch.get("commits");
+
+            if (commitsJsonArray == null) {
                 continue;
             }
 
-            JSONArray commitsJsonArray = (JSONArray) ch.get("commits");
             Iterator<JSONObject> commitsIterator = commitsJsonArray.iterator();
 
 
@@ -65,9 +65,11 @@ public class BitbucketWebhookCatcher extends WebhookCatcher {
                 String commitHash = commitJson.get("hash").toString();
 
                 JSONObject authorInfo = (JSONObject) commitJson.get("author");
-                JSONObject userInfo   = (JSONObject) authorInfo.get("user");
-                String commitAuthor = userInfo.get("username").toString();
+
+                String commitAuthor   = authorInfo.get("raw").toString();
                 String commitMessage = commitJson.get("message").toString();
+
+
 
                 Commit commit = new Commit(commitHash, commitAuthor, commitMessage);
                 commits.add(commit);

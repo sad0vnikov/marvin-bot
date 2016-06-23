@@ -83,11 +83,11 @@ public class GitNotifierPlugin extends Plugin {
                     logger.info("got bitbucket push notification for repository " + repName);
 
                     Commit[] commits = catcher.getPushedCommits();
-                    String message = pushInfo.get("initiator") + " pushed ";
+                    String message = " === " + pushInfo.get("initiator") + " pushed ";
                     if (commits.length > 0) {
-                        message += String.valueOf(commits.length) + " commits to " + pushInfo.get("repository") + ":\n";
+                        message += String.valueOf(commits.length) + " commits to " + pushInfo.get("repository") + ": ===\n";
                         for (int i = 0; i < commits.length; i++) {
-                            message += commits[i].getHash() + " " + commits[i].getUser() + " | " + commits[i].getMessage() + "\n";
+                            message += commits[i].getHash() + " " + commits[i].getUser() + "\n    " + commits[i].getMessage() + "\n";
                         }
 
                         for (String chatId : findChatswithOptionValues("repositories_to_notify", repName)) {
