@@ -13,7 +13,7 @@
 
     <properties>
         <main.class>net.sadovnikov.marvinbot.core.main.Main</main.class>
-        <main.configFileName>connection.properties</main.configFileName>
+        <main.configFileName>main.properties</main.configFileName>
     </properties>
 
     <build>
