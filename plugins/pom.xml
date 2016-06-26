@@ -15,6 +15,7 @@
     <modules>
         <module>echo-plugin</module>
         <module>git-notifier-plugin</module>
+        <module>ping-command</module>
     </modules>
 
     <dependencies>
