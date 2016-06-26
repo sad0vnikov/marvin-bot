@@ -4,10 +4,12 @@ import com.google.inject.Inject;
 import net.sadovnikov.marvinbot.core.command.CommandExecutor;
 import net.sadovnikov.marvinbot.core.command.CommandParser;
 import net.sadovnikov.marvinbot.core.command.annotations.Command;
+import net.sadovnikov.marvinbot.core.command.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.message.SentMessage;
 import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
+import net.sadovnikov.marvinbot.core.permissions.Role;
 import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
 import org.apache.logging.log4j.LogManager;
@@ -46,6 +48,7 @@ public class EchoPlugin extends Plugin {
     }
 
     @Command("echo")
+    @RequiredRole(Role.CHAT_MODERATOR)
     @Extension
     public class SwitcherCommand extends CommandExecutor {
 

@@ -3,10 +3,15 @@ package net.sadovnikov.marvinbot.core.command;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.name.Named;
+import net.sadovnikov.marvinbot.core.command.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
+import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
+import net.sadovnikov.marvinbot.core.permissions.PermissionChecker;
+import net.sadovnikov.marvinbot.core.permissions.Role;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
 
+import java.security.Permission;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -26,8 +31,21 @@ public abstract class CommandExecutor extends EventHandler<MessageEvent> {
         CommandParser parser = injector.getInstance(CommandParser.class);
         Command cmd = parser.parse(ev.getMessage().getText());
         String annotatedCommand = this.getClass().getAnnotation(net.sadovnikov.marvinbot.core.command.annotations.Command.class).value();
-        if (cmd != null && annotatedCommand != null && cmd.getCommand().equals(annotatedCommand)) {
+        int requiredRole = Role.USER;
+        RequiredRole roleAnnotation = this.getClass().getAnnotation(RequiredRole.class);
+        if (roleAnnotation != null) {
+            requiredRole = roleAnnotation.value();
+        }
+        PermissionChecker permissionChecker = injector.getInstance(PermissionChecker.class);
+        boolean userHasRequiredRole = permissionChecker.checkPermissionsByMessage(ev.getMessage(), requiredRole);
+        boolean commandDetected = cmd != null && annotatedCommand != null && cmd.getCommand().equals(annotatedCommand);
+        if (commandDetected && userHasRequiredRole) {
             execute(cmd, ev);
+        } else if (commandDetected && !userHasRequiredRole) {
+            MessageSender messageSender = injector.getInstance(MessageSender.class);
+            ResourceBundle locData = ResourceBundle.getBundle("loc_data_main", locale);
+            String notEnoughPermissionsMessage = locData.getString("notEnoughPermissionsMessageToExecuteCommand");
+            messageSender.reply(ev.getMessage(), notEnoughPermissionsMessage);
         }
     }
 

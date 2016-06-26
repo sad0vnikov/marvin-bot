@@ -8,6 +8,8 @@ import net.sadovnikov.marvinbot.core.events.EventDispatcher;
 import net.sadovnikov.marvinbot.core.events.event_dispatchers.Skype4jEventDispatcher;
 import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
 import net.sadovnikov.marvinbot.core.message_sender.Skype4jMessageSender;
+import net.sadovnikov.marvinbot.core.permissions.PermissionChecker;
+import net.sadovnikov.marvinbot.core.permissions.Skype4jPermissionChecker;
 
 import java.util.Locale;
 
@@ -28,6 +30,7 @@ public class Skype4jInjector extends AbstractModule {
         bind(MessageSender.class).to(Skype4jMessageSender.class);
         bind(EventDispatcher.class).to(Skype4jEventDispatcher.class);
         bind(ContactManager.class).to(Skype4jContactManager.class);
+        bind(PermissionChecker.class).to(Skype4jPermissionChecker.class);
         bind(Skype.class).toInstance(this.skype);
     }
 }

@@ -7,9 +7,11 @@ import net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers.Com
 import net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers.WebhookCatcher;
 import net.sadovnikov.marvinbot.core.command.CommandExecutor;
 import net.sadovnikov.marvinbot.core.command.annotations.Command;
+import net.sadovnikov.marvinbot.core.command.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.message.SentMessage;
 import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
+import net.sadovnikov.marvinbot.core.permissions.Role;
 import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
 import org.json.simple.JSONObject;
@@ -115,6 +117,7 @@ public class GitNotifierPlugin extends Plugin {
 
     @Extension
     @Command("git-notifier")
+    @RequiredRole(Role.CHAT_MODERATOR)
     public class AddNotifierCommand extends CommandExecutor {
 
 
