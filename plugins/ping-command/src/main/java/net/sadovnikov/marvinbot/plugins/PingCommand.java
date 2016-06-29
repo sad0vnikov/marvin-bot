@@ -18,7 +18,7 @@ import ro.fortsoft.pf4j.PluginWrapper;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class PingCommand extends Plugin {
+public class  PingCommand extends Plugin {
 
     protected MessageSender messageSender;
     protected Locale locale;

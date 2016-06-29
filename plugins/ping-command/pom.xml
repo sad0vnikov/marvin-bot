@@ -14,7 +14,7 @@
 
     <properties>
         <plugin.id>ping-command</plugin.id>
-        <plugin.class>net.sadovnikov.marbinbot.plugins.git_notifier_plugin.PingCommand</plugin.class>
+        <plugin.class>net.sadovnikov.marvinbot.plugins.PingCommand</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>Alexander Sadovnikov</plugin.provider>
         <plugin.dependencies></plugin.dependencies>
