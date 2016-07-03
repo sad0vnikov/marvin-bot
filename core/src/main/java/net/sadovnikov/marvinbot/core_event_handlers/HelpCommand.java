@@ -1,11 +1,13 @@
 package net.sadovnikov.marvinbot.core_event_handlers;
 
 import com.google.inject.Inject;
-import net.sadovnikov.marvinbot.core.command.CommandExecutor;
-import net.sadovnikov.marvinbot.core.command.annotations.Command;
+import net.sadovnikov.marvinbot.core.service.CommandExecutor;
+import net.sadovnikov.marvinbot.core.annotations.Command;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.main.PluginLoader;
-import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
+import net.sadovnikov.marvinbot.core.service.message_sender.MessageSender;
+import net.sadovnikov.marvinbot.core.service.message_sender.MessageSenderException;
+import org.apache.logging.log4j.Logger;
 import ro.fortsoft.pf4j.Extension;
 import ro.fortsoft.pf4j.PluginManager;
 
@@ -20,16 +22,18 @@ public class HelpCommand extends CommandExecutor {
     MessageSender sender;
     ResourceBundle locData;
     PluginManager pluginManager;
+    Logger logger;
 
     @Inject
-    public HelpCommand(MessageSender sender, PluginLoader pluginLoader, Locale locale) {
+    public HelpCommand(MessageSender sender, PluginLoader pluginLoader, Locale locale, Logger logger) {
         this.sender = sender;
         this.locData = ResourceBundle.getBundle("loc_data_main", locale);
         this.pluginManager = pluginLoader.getPluginManager();
+        this.logger = logger;
     }
 
     @Override
-    public void execute(net.sadovnikov.marvinbot.core.command.Command cmd, MessageEvent evt) {
+    public void execute(net.sadovnikov.marvinbot.core.domain.Command cmd, MessageEvent evt) {
         List<CommandExecutor> cmdExecutors = pluginManager.getExtensions(CommandExecutor.class);
 
         StringBuilder help = new StringBuilder();
@@ -47,7 +51,11 @@ public class HelpCommand extends CommandExecutor {
             help.append(locData.getString("noAvailableCommands"));
         }
 
-        sender.reply(evt.getMessage(), help.toString());
+        try {
+            sender.reply(evt.getMessage(), help.toString());
+        } catch (MessageSenderException e) {
+            logger.catching(e);
+        }
     }
 
     protected String getHelpStringFromCommandExecutor(CommandExecutor executor) {

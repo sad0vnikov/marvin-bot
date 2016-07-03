@@ -1,7 +1,8 @@
 package net.sadovnikov.marvinbot.core.main;
 
 
-import net.sadovnikov.marvinbot.core.client.Skype4jClient;
+import net.sadovnikov.marvinbot.core.injection.LoggerInjector;
+import net.sadovnikov.marvinbot.core.service.client.Skype4jClient;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import net.sadovnikov.marvinbot.core.config.ConfigException;
@@ -13,10 +14,6 @@ import net.sadovnikov.marvinbot.core.injection.ConfigInjector;
 import net.sadovnikov.marvinbot.core.injection.Skype4jInjector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ro.fortsoft.pf4j.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 
@@ -68,7 +65,8 @@ public class Main {
                 new Skype4jInjector(skypeClient.getSkype4jInstance()),
                 new PluginManagerInjector(),
                 new ConfigInjector(config),
-                new net.sadovnikov.marvinbot.core.injection.Db(dbService)
+                new net.sadovnikov.marvinbot.core.injection.Db(dbService),
+                new LoggerInjector(logger)
         );
 
         skypeClient.connect();

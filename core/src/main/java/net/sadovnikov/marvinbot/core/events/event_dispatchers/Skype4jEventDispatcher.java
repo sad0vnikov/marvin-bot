@@ -9,12 +9,10 @@ import com.samczsun.skype4j.events.chat.ChatJoinedEvent;
 import com.samczsun.skype4j.events.chat.ChatQuitEvent;
 import com.samczsun.skype4j.events.chat.message.MessageReceivedEvent;
 import com.samczsun.skype4j.exceptions.ConnectionException;
-import net.sadovnikov.marvinbot.core.contact.Contact;
+import net.sadovnikov.marvinbot.core.domain.Contact;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
 import net.sadovnikov.marvinbot.core.events.event_types.*;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import ro.fortsoft.pf4j.PluginManager;
 
 /**
  * An EventDispatcher implementation whilch is a wrapper for Skype4j event dispatcher.
@@ -42,11 +40,11 @@ public class Skype4jEventDispatcher extends EventDispatcher {
                 skype4jMessage.getChat().getIdentity();
                 String chatId = skype4jMessage.getChat().getIdentity();
 
-                LogManager.getLogger("core-logger").info("new message from " + chatId + ": " + msgContent);
+                LogManager.getLogger("core-logger").info("new net.sadovnikov.marvinbot.core.domain.message from " + chatId + ": " + msgContent);
 
                 String userName = skype4jMessage.getSender().getUsername();
 
-                net.sadovnikov.marvinbot.core.message.ReceivedMessage msg = new net.sadovnikov.marvinbot.core.message.ReceivedMessage(chatId, userName, msgContent);
+                net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage msg = new net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage(chatId, userName, msgContent);
                 dispatch(new MessageEvent(msg));
             }
 

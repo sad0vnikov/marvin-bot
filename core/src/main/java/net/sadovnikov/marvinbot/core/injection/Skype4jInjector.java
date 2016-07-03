@@ -2,16 +2,14 @@ package net.sadovnikov.marvinbot.core.injection;
 
 import com.google.inject.AbstractModule;
 import com.samczsun.skype4j.Skype;
-import net.sadovnikov.marvinbot.core.contact.ContactManager;
-import net.sadovnikov.marvinbot.core.contact.Skype4jContactManager;
+import net.sadovnikov.marvinbot.core.service.contact.ContactManager;
+import net.sadovnikov.marvinbot.core.service.contact.Skype4jContactManager;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
 import net.sadovnikov.marvinbot.core.events.event_dispatchers.Skype4jEventDispatcher;
-import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
-import net.sadovnikov.marvinbot.core.message_sender.Skype4jMessageSender;
-import net.sadovnikov.marvinbot.core.permissions.PermissionChecker;
-import net.sadovnikov.marvinbot.core.permissions.Skype4jPermissionChecker;
-
-import java.util.Locale;
+import net.sadovnikov.marvinbot.core.service.message_sender.MessageSender;
+import net.sadovnikov.marvinbot.core.service.message_sender.Skype4jMessageSender;
+import net.sadovnikov.marvinbot.core.service.permissions.PermissionChecker;
+import net.sadovnikov.marvinbot.core.service.permissions.Skype4jPermissionChecker;
 
 
 /**

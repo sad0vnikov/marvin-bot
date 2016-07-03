@@ -1,10 +1,13 @@
 package permissions;
 
 
-import net.sadovnikov.marvinbot.core.message.ReceivedMessage;
-import net.sadovnikov.marvinbot.core.permissions.PermissionChecker;
-import net.sadovnikov.marvinbot.core.permissions.Role;
-import net.sadovnikov.marvinbot.core.permissions.StubbedPermissionChecker;
+import com.samczsun.skype4j.user.User;
+import net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage;
+import net.sadovnikov.marvinbot.core.domain.user.AdminRole;
+import net.sadovnikov.marvinbot.core.domain.user.ChatModeratorRole;
+import net.sadovnikov.marvinbot.core.domain.user.UserRole;
+import net.sadovnikov.marvinbot.core.service.permissions.PermissionChecker;
+import net.sadovnikov.marvinbot.core.service.permissions.StubbedPermissionChecker;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertTrue;
@@ -16,7 +19,7 @@ public class PermissionsCheckerTest {
     @Test
     public void testRolesDetection()
     {
-        String username = "user";
+        String username = "net.sadovnikov.marvinbot.core.domain.user";
         String adminName = "admin";
         String moderatorName = "moderator";
         String notUserName = "notUser";
@@ -31,21 +34,21 @@ public class PermissionsCheckerTest {
 
         PermissionChecker checker = new StubbedPermissionChecker(adminName);
 
-        assertTrue(checker.checkPermissionsByMessage(adminMessage, Role.ADMIN));
-        assertTrue(checker.checkPermissionsByMessage(adminMessage, Role.CHAT_MODERATOR));
-        assertTrue(checker.checkPermissionsByMessage(adminMessage, Role.USER));
+        assertTrue(checker.checkPermissionsByMessage(adminMessage, new AdminRole()));
+        assertTrue(checker.checkPermissionsByMessage(adminMessage, new ChatModeratorRole()));
+        assertTrue(checker.checkPermissionsByMessage(adminMessage, new UserRole()));
 
-        assertFalse(checker.checkPermissionsByMessage(moderatorMessage, Role.ADMIN));
-        assertTrue(checker.checkPermissionsByMessage(moderatorMessage, Role.CHAT_MODERATOR));
-        assertTrue(checker.checkPermissionsByMessage(moderatorMessage, Role.USER));
+        assertFalse(checker.checkPermissionsByMessage(moderatorMessage, new AdminRole()));
+        assertTrue(checker.checkPermissionsByMessage(moderatorMessage, new ChatModeratorRole()));
+        assertTrue(checker.checkPermissionsByMessage(moderatorMessage, new UserRole()));
 
-        assertFalse(checker.checkPermissionsByMessage(message, Role.ADMIN));
-        assertFalse(checker.checkPermissionsByMessage(message, Role.CHAT_MODERATOR));
-        assertTrue(checker.checkPermissionsByMessage(message, Role.USER));
+        assertFalse(checker.checkPermissionsByMessage(message, new AdminRole()));
+        assertFalse(checker.checkPermissionsByMessage(message, new ChatModeratorRole()));
+        assertTrue(checker.checkPermissionsByMessage(message, new UserRole()));
 
-        assertFalse(checker.checkPermissionsByMessage(notUserMessage, Role.ADMIN));
-        assertFalse(checker.checkPermissionsByMessage(notUserMessage, Role.CHAT_MODERATOR));
-        assertFalse(checker.checkPermissionsByMessage(notUserMessage, Role.USER));
+        assertFalse(checker.checkPermissionsByMessage(notUserMessage, new AdminRole()));
+        assertFalse(checker.checkPermissionsByMessage(notUserMessage, new ChatModeratorRole()));
+        assertFalse(checker.checkPermissionsByMessage(notUserMessage, new UserRole()));
     }
 
 }

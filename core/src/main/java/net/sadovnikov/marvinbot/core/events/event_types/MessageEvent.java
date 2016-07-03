@@ -1,11 +1,11 @@
 package net.sadovnikov.marvinbot.core.events.event_types;
 
 import net.sadovnikov.marvinbot.core.events.Event;
-import net.sadovnikov.marvinbot.core.message.ReceivedMessage;
+import net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage;
 
 
 /**
- * An event which dispatches up when a bot gets a new net.sadovnikov.marvinbot.core.message
+ * An event which dispatches up when a bot gets a new net.sadovnikov.marvinbot.core.domain.message
  */
 public class MessageEvent extends Event {
 
