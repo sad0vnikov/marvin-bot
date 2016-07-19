@@ -22,7 +22,7 @@ public abstract class EventDispatcher extends Thread {
         PluginManager pluginManager = pluginLoader.getPluginManager();
 
         try {
-            Class eventHandlerClass = Class.forName("net.sadovnikov.marvinbot.core.events.EventHandler");
+            Class eventHandlerClass = EventHandler.class;
             List<EventHandler> eventHandlers = pluginManager.getExtensions(eventHandlerClass);
             for (EventHandler handler : eventHandlers) {
                 Class clazz = handler.getClass();
@@ -33,8 +33,6 @@ public abstract class EventDispatcher extends Thread {
                 }
 
             }
-        } catch (ClassNotFoundException e) {
-            LogManager.getLogger("core-logger").error("No handler for " + ev.getClass().getName() + " found");
         } catch (PluginException e) {
             LogManager.getLogger("core-logger").catching(e);
         }

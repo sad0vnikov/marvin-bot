@@ -63,6 +63,15 @@ public abstract class PluginOption {
         return doc.getString("value");
     }
 
+    public String get(String name, String defaultValue) throws DbException {
+        String value = get(name);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return value;
+    }
+
     public List<String> getValuesList(String name) throws DbException {
         Document doc = getDocument(name);
         if (doc == null) {

@@ -1,4 +1,4 @@
-package net.sadovnikov.marvinbot.core.service.message_sender;
+package net.sadovnikov.marvinbot.core.service.message;
 
 import com.google.inject.Inject;
 import com.samczsun.skype4j.Skype;
@@ -11,16 +11,16 @@ import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
 import net.sadovnikov.marvinbot.core.domain.message.SentMessage;
 import org.apache.logging.log4j.LogManager;
 
-public class Skype4jMessageSender extends MessageSender {
+public class Skype4JMessageSenderService extends MessageSenderService {
 
     Skype skype;
 
     @Inject
-    public Skype4jMessageSender(Skype skype) {
+    public Skype4JMessageSenderService(Skype skype) {
         this.skype = skype;
     }
 
-    public SentMessage sendMessage(MessageToSend message) throws MessageSenderException {
+    public SentMessage send(MessageToSend message) throws MessageSenderException {
         com.samczsun.skype4j.formatting.Message toSend = com.samczsun.skype4j.formatting.Message.create();
         toSend.with(Text.plain(message.text()));
 

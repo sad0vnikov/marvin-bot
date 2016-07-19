@@ -2,27 +2,30 @@ package net.sadovnikov.marvinbot.core.main;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import net.sadovnikov.marvinbot.core.db.DbException;
+import net.sadovnikov.marvinbot.api.BotPluginApi;
+import net.sadovnikov.marvinbot.core.service.contact.ContactManager;
+import net.sadovnikov.marvinbot.core.service.message.MessageSenderService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.plugins.*;
 import ro.fortsoft.pf4j.*;
-import ro.fortsoft.pf4j.Plugin;
+import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import ro.fortsoft.pf4j.PluginFactory;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PluginLoader {
 
     private PluginManager pluginManager;
     private Logger logger;
     private Injector injector;
+    private Locale appLocale;
 
 
     @Inject
-    public PluginLoader(Injector injector) {
+    public PluginLoader(Injector injector, Locale locale) {
 
         this.injector = injector;
 
@@ -31,18 +34,8 @@ public class PluginLoader {
         /**
          * Overriding DefaultExtensionFactory so that we could inject modules in extensions
          */
-        PluginManager pluginManager = new DefaultPluginManager() {
-            @Override
-            protected ExtensionFactory createExtensionFactory() {
-
-                return new GuiceExtensionFactory();
-            }
-
-            @Override
-            protected PluginFactory createPluginFactory() {
-                return new GuicePluginFactory();
-            }
-        };
+        PluginManager pluginManager = new MarvinPluginManager();
+        this.appLocale = locale;
 
         this.pluginManager = pluginManager;
     }
@@ -69,20 +62,31 @@ public class PluginLoader {
 
     }
 
-    private class GuicePluginFactory extends DefaultPluginFactory {
+    private class MarvinPluginFactory extends DefaultPluginFactory {
         @Override
         public Plugin create(PluginWrapper pluginWrapper) {
-            Plugin plugin = super.create(pluginWrapper);
+            Plugin plugin =
+                    (Plugin) super.create(pluginWrapper);
+
             if (plugin != null) {
                 injector.injectMembers(plugin);
+
+                BotPluginApi pluginApiFacade = new BotPluginApi(
+                        injector.getInstance(MessageSenderService.class),
+                        injector.getInstance(ContactManager.class),
+                        plugin.getPluginName(),
+                        appLocale
+                    );
+
+                plugin.init(pluginApiFacade);
             }
 
             return plugin;
+
         }
     }
 
-
-    private class GuiceExtensionFactory extends DefaultExtensionFactory {
+    private class MarvinExtensionFactory extends DefaultExtensionFactory {
         @Override
         public Object create(Class<?> extensionClass) {
             logger.debug("Create instance for extension '{}'", extensionClass.getName());
@@ -104,7 +108,7 @@ public class PluginLoader {
 
         public Plugin getPluginByClass(Class clazz) throws Exception {
             for (PluginWrapper wrapper : getPluginManager().getPlugins()) {
-                Plugin plugin = wrapper.getPlugin();
+                Plugin plugin = (Plugin) wrapper.getPlugin();
                 if (plugin.getClass().equals(clazz)) {
                     return plugin;
                 }
@@ -114,6 +118,18 @@ public class PluginLoader {
         }
     }
 
+    private class MarvinPluginManager extends DefaultPluginManager {
+        @Override
+        protected ExtensionFactory createExtensionFactory() {
 
+            return new MarvinExtensionFactory();
+        }
+
+        @Override
+        protected PluginFactory createPluginFactory() {
+            return new MarvinPluginFactory();
+        }
+
+    }
 
 }

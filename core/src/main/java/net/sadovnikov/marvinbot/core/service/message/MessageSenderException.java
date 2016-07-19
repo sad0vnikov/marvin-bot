@@ -1,4 +1,4 @@
-package net.sadovnikov.marvinbot.core.service.message_sender;
+package net.sadovnikov.marvinbot.core.service.message;
 
 
 public class MessageSenderException extends Exception {

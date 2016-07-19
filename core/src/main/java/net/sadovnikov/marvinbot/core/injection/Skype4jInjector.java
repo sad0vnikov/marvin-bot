@@ -6,8 +6,8 @@ import net.sadovnikov.marvinbot.core.service.contact.ContactManager;
 import net.sadovnikov.marvinbot.core.service.contact.Skype4jContactManager;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
 import net.sadovnikov.marvinbot.core.events.event_dispatchers.Skype4jEventDispatcher;
-import net.sadovnikov.marvinbot.core.service.message_sender.MessageSender;
-import net.sadovnikov.marvinbot.core.service.message_sender.Skype4jMessageSender;
+import net.sadovnikov.marvinbot.core.service.message.MessageSenderService;
+import net.sadovnikov.marvinbot.core.service.message.Skype4JMessageSenderService;
 import net.sadovnikov.marvinbot.core.service.permissions.PermissionChecker;
 import net.sadovnikov.marvinbot.core.service.permissions.Skype4jPermissionChecker;
 
@@ -25,7 +25,7 @@ public class Skype4jInjector extends AbstractModule {
 
     @Override
     public void configure() {
-        bind(MessageSender.class).to(Skype4jMessageSender.class);
+        bind(MessageSenderService.class).to(Skype4JMessageSenderService.class);
         bind(EventDispatcher.class).to(Skype4jEventDispatcher.class);
         bind(ContactManager.class).to(Skype4jContactManager.class);
         bind(PermissionChecker.class).to(Skype4jPermissionChecker.class);

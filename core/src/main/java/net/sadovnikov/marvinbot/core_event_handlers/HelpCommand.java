@@ -5,8 +5,8 @@ import net.sadovnikov.marvinbot.core.service.CommandExecutor;
 import net.sadovnikov.marvinbot.core.annotations.Command;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.main.PluginLoader;
-import net.sadovnikov.marvinbot.core.service.message_sender.MessageSender;
-import net.sadovnikov.marvinbot.core.service.message_sender.MessageSenderException;
+import net.sadovnikov.marvinbot.core.service.message.MessageSenderService;
+import net.sadovnikov.marvinbot.core.service.message.MessageSenderException;
 import org.apache.logging.log4j.Logger;
 import ro.fortsoft.pf4j.Extension;
 import ro.fortsoft.pf4j.PluginManager;
@@ -19,13 +19,13 @@ import java.util.ResourceBundle;
 @Extension
 public class HelpCommand extends CommandExecutor {
 
-    MessageSender sender;
+    MessageSenderService sender;
     ResourceBundle locData;
     PluginManager pluginManager;
     Logger logger;
 
     @Inject
-    public HelpCommand(MessageSender sender, PluginLoader pluginLoader, Locale locale, Logger logger) {
+    public HelpCommand(MessageSenderService sender, PluginLoader pluginLoader, Locale locale, Logger logger) {
         this.sender = sender;
         this.locData = ResourceBundle.getBundle("loc_data_main", locale);
         this.pluginManager = pluginLoader.getPluginManager();

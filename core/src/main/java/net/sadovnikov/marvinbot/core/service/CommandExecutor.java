@@ -9,10 +9,10 @@ import net.sadovnikov.marvinbot.core.domain.user.Role;
 import net.sadovnikov.marvinbot.core.domain.user.UserRole;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
-import net.sadovnikov.marvinbot.core.service.message_sender.MessageSender;
+import net.sadovnikov.marvinbot.core.service.message.MessageSenderService;
 import net.sadovnikov.marvinbot.core.service.permissions.PermissionChecker;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
-import net.sadovnikov.marvinbot.core.service.message_sender.MessageSenderException;
+import net.sadovnikov.marvinbot.core.service.message.MessageSenderException;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -51,11 +51,11 @@ public abstract class CommandExecutor extends EventHandler<MessageEvent> {
         if (commandDetected && userHasRequiredRole) {
             execute(cmd, ev);
         } else if (commandDetected && !userHasRequiredRole) {
-            MessageSender messageSender = injector.getInstance(MessageSender.class);
+            MessageSenderService messageSenderService = injector.getInstance(MessageSenderService.class);
             ResourceBundle locData = ResourceBundle.getBundle("loc_data_main", locale);
             String notEnoughPermissionsMessage = locData.getString("notEnoughPermissionsMessageToExecuteCommand");
             try {
-                messageSender.reply(ev.getMessage(), notEnoughPermissionsMessage);
+                messageSenderService.reply(ev.getMessage(), notEnoughPermissionsMessage);
             } catch (MessageSenderException e) {
                 logger.catching(e);
             }
