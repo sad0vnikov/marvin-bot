@@ -5,15 +5,17 @@ import com.sun.net.httpserver.*;
 import net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers.BitbucketWebhookCatcher;
 import net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers.Commit;
 import net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers.WebhookCatcher;
-import net.sadovnikov.marvinbot.core.command.CommandExecutor;
-import net.sadovnikov.marvinbot.core.command.annotations.Command;
-import net.sadovnikov.marvinbot.core.command.annotations.RequiredRole;
+import net.sadovnikov.marvinbot.core.db.DbException;
+import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
+import net.sadovnikov.marvinbot.core.service.CommandExecutor;
+import net.sadovnikov.marvinbot.core.annotations.Command;
+import net.sadovnikov.marvinbot.core.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
-import net.sadovnikov.marvinbot.core.message.SentMessage;
-import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
-import net.sadovnikov.marvinbot.core.permissions.Role;
+import net.sadovnikov.marvinbot.core.domain.message.SentMessage;
+import net.sadovnikov.marvinbot.core.domain.user.ChatModeratorRole;
 import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
+import net.sadovnikov.marvinbot.core.service.message.MessageSenderException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import ro.fortsoft.pf4j.Extension;
@@ -33,12 +35,6 @@ public class GitNotifierPlugin extends Plugin {
         super(pluginWrapper);
     }
 
-    MessageSender messageSender;
-
-    @Inject
-    public void setMessageSender(MessageSender messageSender) {
-        this.messageSender = messageSender;
-    }
 
     public void start() {
         HttpListener listener = new HttpListener();
@@ -92,11 +88,9 @@ public class GitNotifierPlugin extends Plugin {
                             message += commits[i].getHash() + " " + commits[i].getUser() + "\n    " + commits[i].getMessage() + "\n";
                         }
 
-                        for (String chatId : findChatswithOptionValues("repositories_to_notify", repName)) {
-                            SentMessage msgObj = new SentMessage();
-                            msgObj.setText(message);
-                            msgObj.setRecepientId(chatId);
-                            messageSender.sendMessage(msgObj);
+                        for (String chatId : marvin.pluginOptions().chat(null).findChatswithOptionValues("repositories_to_notify", repName)) {
+                            MessageToSend msgObj = new MessageToSend(message, chatId);
+                            marvin.message().send(msgObj);
                         }
 
                     }
@@ -117,34 +111,40 @@ public class GitNotifierPlugin extends Plugin {
 
     @Extension
     @Command("git-notifier")
-    @RequiredRole(Role.CHAT_MODERATOR)
+    @RequiredRole(ChatModeratorRole.class)
     public class AddNotifierCommand extends CommandExecutor {
 
 
-        public void execute(net.sadovnikov.marvinbot.core.command.Command command, MessageEvent ev) {
+        public void execute(net.sadovnikov.marvinbot.core.domain.Command command, MessageEvent ev) {
             String[] args = command.getArgs();
-            if (args.length != 2 || (!args[0].equals("add") && !args[0].equals("remove"))) {
-                messageSender.reply(ev.getMessage(), getUsage());
-                return;
-            }
 
-            String chatId = ev.getMessage().getChatId();
-            String addr = args[1];
-
-            if (args[0].equals("add")) {
-
-                if (addr.contains("bitbucket")) {
-                    addRepository(chatId, addr);
-                    messageSender.reply(ev.getMessage(), "Repository added");
-                } else {
-                    messageSender.reply(ev.getMessage(), "Only bitbucket repositories are supported now");
+            try {
+                if (args.length != 2 || (!args[0].equals("add") && !args[0].equals("remove"))) {
+                    marvin.message().reply(ev.getMessage(), getUsage());
+                    return;
                 }
 
-            }
+                String chatId = ev.getMessage().chatId();
+                String addr = args[1];
 
-            if (args[0].equals("remove")) {
-                removeRepository(chatId, addr);
-                messageSender.reply(ev.getMessage(), "Repository removed");
+                if (args[0].equals("add")) {
+
+                    if (addr.contains("bitbucket")) {
+                        addRepository(chatId, addr);
+                        marvin.message().reply(ev.getMessage(), "Repository added");
+                    } else {
+                        marvin.message().reply(ev.getMessage(), "Only bitbucket repositories are supported now");
+                    }
+
+                }
+
+                if (args[0].equals("remove")) {
+                    removeRepository(chatId, addr);
+                    marvin.message().reply(ev.getMessage(), "Repository removed");
+                }
+
+            } catch (MessageSenderException e) {
+                logger.catching(e);
             }
 
         }
@@ -163,18 +163,23 @@ public class GitNotifierPlugin extends Plugin {
 
         protected Set<String> getChatRepsList(String chatId) {
             try {
-                return new HashSet(getListChatOption(chatId, "repositories_to_notify"));
 
-            } catch (PluginException e) {
+                List<String> valuesList = marvin.pluginOptions()
+                        .chat(chatId)
+                        .getValuesList("repositories_to_notify");
+
+                return new HashSet<>(valuesList);
+
+            } catch (DbException e) {
                 logger.catching(e);
-                return new HashSet<String>();
+                return new HashSet<>();
             }
         }
 
         protected void saveChatRepsList(String chatId, Set<String> list) {
             try {
-                setChatOption(chatId, "repositories_to_notify", new ArrayList<>(list));
-            } catch (PluginException e) {
+                marvin.pluginOptions().chat(chatId).set("repositories_to_notify", new ArrayList<>(list));
+            } catch (DbException e) {
                 logger.catching(e);
             }
         }

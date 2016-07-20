@@ -2,16 +2,16 @@ package net.sadovnikov.marvinbot.plugins;
 
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import net.sadovnikov.marvinbot.core.command.Command;
-import net.sadovnikov.marvinbot.core.command.CommandExecutor;
-import net.sadovnikov.marvinbot.core.command.annotations.RequiredRole;
+import net.sadovnikov.marvinbot.core.domain.Command;
+import net.sadovnikov.marvinbot.core.service.CommandExecutor;
+import net.sadovnikov.marvinbot.core.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
-import net.sadovnikov.marvinbot.core.message.ReceivedMessage;
-import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
-import net.sadovnikov.marvinbot.core.permissions.Role;
+import net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage;
+import net.sadovnikov.marvinbot.core.domain.user.UserRole;
 import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
+import net.sadovnikov.marvinbot.core.service.message.MessageSenderException;
+import org.apache.logging.log4j.Logger;
 import ro.fortsoft.pf4j.Extension;
 import ro.fortsoft.pf4j.PluginWrapper;
 
@@ -20,27 +20,18 @@ import java.util.ResourceBundle;
 
 public class  PingCommand extends Plugin {
 
-    protected MessageSender messageSender;
     protected Locale locale;
+    protected Logger logger;
 
     public PingCommand(PluginWrapper wrapper) {
         super(wrapper);
     }
 
-    @Inject
-    public void setLocale(Locale locale) {
-        this.locale = locale;
 
-    }
 
-    @Inject
-    public void setMessageSender(MessageSender messageSender) {
-        this.messageSender = messageSender;
-    }
-
-    @net.sadovnikov.marvinbot.core.command.annotations.Command("ping")
+    @net.sadovnikov.marvinbot.core.annotations.Command("ping")
     @Extension
-    @RequiredRole(Role.USER)
+    @RequiredRole(UserRole.class)
     public class PingCommandHandler extends CommandExecutor {
 
         private ResourceBundle locData;
@@ -50,11 +41,15 @@ public class  PingCommand extends Plugin {
         public void execute(Command cmd, MessageEvent ev) throws PluginException {
             String msgText = "pong";
             ReceivedMessage receivedMessage = ev.getMessage();
-            messageSender.reply(receivedMessage, msgText);
+            try {
+                marvin.message().reply(receivedMessage, msgText);
+            } catch (MessageSenderException e) {
+                logger.catching(e);
+            }
         }
 
         public String getHelp() {
-            locData = ResourceBundle.getBundle("loc_data_main", locale);
+            locData = ResourceBundle.getBundle("loc_data_main", marvin.getLocale());
             return locData.getString("helpString");
         }
 

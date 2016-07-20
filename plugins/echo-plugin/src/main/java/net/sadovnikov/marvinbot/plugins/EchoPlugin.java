@@ -1,17 +1,17 @@
 package net.sadovnikov.marvinbot.plugins;
 
-import com.google.inject.Inject;
-import net.sadovnikov.marvinbot.core.command.CommandExecutor;
-import net.sadovnikov.marvinbot.core.command.CommandParser;
-import net.sadovnikov.marvinbot.core.command.annotations.Command;
-import net.sadovnikov.marvinbot.core.command.annotations.RequiredRole;
+import net.sadovnikov.marvinbot.core.db.DbException;
+import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
+import net.sadovnikov.marvinbot.core.service.CommandExecutor;
+import net.sadovnikov.marvinbot.core.service.CommandParser;
+import net.sadovnikov.marvinbot.core.annotations.Command;
+import net.sadovnikov.marvinbot.core.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
-import net.sadovnikov.marvinbot.core.message.SentMessage;
-import net.sadovnikov.marvinbot.core.message_sender.MessageSender;
-import net.sadovnikov.marvinbot.core.permissions.Role;
+import net.sadovnikov.marvinbot.core.domain.user.ChatModeratorRole;
 import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
+import net.sadovnikov.marvinbot.core.service.message.MessageSenderException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ro.fortsoft.pf4j.Extension;
@@ -21,7 +21,6 @@ import ro.fortsoft.pf4j.PluginWrapper;
 
 public class EchoPlugin extends Plugin {
 
-    @Inject protected MessageSender messageSender;
     protected final Logger logger = LogManager.getLogger("core-logger");
 
     public EchoPlugin(PluginWrapper wrapper) {
@@ -34,40 +33,51 @@ public class EchoPlugin extends Plugin {
         public void handle(MessageEvent ev) throws PluginException {
 
             CommandParser commandParser = injector.getInstance(CommandParser.class);
-            boolean isEchoingOn = getChatOption(ev.getMessage().getChatId(), "enableEcho", "off").equals("on");
-            boolean isCommand   = commandParser.getIsCommand(ev.getMessage()); // is message a valid bot command
-            if (isEchoingOn && !isCommand) {
-                SentMessage message = new SentMessage();
-                message.setText(ev.getMessage().getText());
-                message.setRecepientId(ev.getMessage().getChatId());
-
-                messageSender.sendMessage(message);
+            String chatId  = ev.getMessage().chatId();
+            String msgText = ev.getMessage().text();
+            try {
+                boolean isEchoingOn = marvin.pluginOptions().chat(chatId).get("enableEcho", "off").equals("on");
+                boolean isCommand   = commandParser.getIsCommand(ev.getMessage()); // is net.sadovnikov.marvinbot.core.domain.message a valid bot command
+                if (isEchoingOn && !isCommand) {
+                    MessageToSend message = new MessageToSend(msgText, chatId);
+                    marvin.message().send(message);
+                }
+            } catch (DbException | MessageSenderException e) {
+                logger.catching(e);
             }
+
 
         }
     }
 
     @Command("echo")
-    @RequiredRole(Role.CHAT_MODERATOR)
+    @RequiredRole(ChatModeratorRole.class)
     @Extension
     public class SwitcherCommand extends CommandExecutor {
 
 
         @Override
-        public void execute(net.sadovnikov.marvinbot.core.command.Command cmd, MessageEvent ev) throws PluginException {
+        public void execute(net.sadovnikov.marvinbot.core.domain.Command cmd, MessageEvent ev) throws PluginException {
             String[] args = cmd.getArgs();
 
             if (args.length == 0) {
                 return;
             }
+            String chatId = ev.getMessage().chatId();
 
-            if ( args[0].equals("on")) {
-                setChatOption(ev.getMessage().getChatId(), "enableEcho", "on");
-                messageSender.reply(ev.getMessage(), "Echoing is turned on!");
-            } else if ( args[0].equals("off")) {
-                setChatOption(ev.getMessage().getChatId(), "enableEcho", "off");
-                messageSender.reply(ev.getMessage(), "Echoing is turned off");
+            try {
+                if ( args[0].equals("on")) {
+                    marvin.pluginOptions().chat(chatId).set("enableEcho", "on");
+                    marvin.message().reply(ev.getMessage(), "Echoing is turned on!");
+                } else if ( args[0].equals("off")) {
+                    marvin.pluginOptions().chat(chatId).set("enableEcho", "off");
+                    marvin.message().reply(ev.getMessage(), "Echoing is turned off");
+                }
+            } catch (MessageSenderException | DbException e) {
+                logger.catching(e);
             }
+
+
         }
     }
 

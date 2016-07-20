@@ -1,1 +1,2 @@
 #all plugins except these will be loaded:
+echo-plugin
