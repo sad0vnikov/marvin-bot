@@ -1,6 +1,7 @@
 package net.sadovnikov.marvinbot.core.events.event_dispatchers;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.samczsun.skype4j.Skype;
 import com.samczsun.skype4j.chat.messages.ReceivedMessage;
 import com.samczsun.skype4j.events.EventHandler;
@@ -9,9 +10,11 @@ import com.samczsun.skype4j.events.chat.ChatJoinedEvent;
 import com.samczsun.skype4j.events.chat.ChatQuitEvent;
 import com.samczsun.skype4j.events.chat.message.MessageReceivedEvent;
 import com.samczsun.skype4j.exceptions.ConnectionException;
+import net.sadovnikov.marvinbot.core.domain.Command;
 import net.sadovnikov.marvinbot.core.domain.Contact;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
 import net.sadovnikov.marvinbot.core.events.event_types.*;
+import net.sadovnikov.marvinbot.core.service.CommandParser;
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -21,11 +24,13 @@ import org.apache.logging.log4j.LogManager;
 public class Skype4jEventDispatcher extends EventDispatcher {
 
     Skype skype;
+    Injector injector;
 
 
     @Inject
-    public Skype4jEventDispatcher(Skype skype) {
+    public Skype4jEventDispatcher(Skype skype, Injector injector) {
         this.skype = skype;
+        this.injector = injector;
     }
 
 
@@ -44,7 +49,10 @@ public class Skype4jEventDispatcher extends EventDispatcher {
 
                 String userName = skype4jMessage.getSender().getUsername();
 
-                net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage msg = new net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage(chatId, userName, msgContent);
+                CommandParser parser = injector.getInstance(CommandParser.class);
+                Command cmd = parser.parse(msgContent);
+
+                net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage msg = new net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage(chatId, userName, msgContent, cmd);
                 dispatch(new MessageEvent(msg));
             }
 

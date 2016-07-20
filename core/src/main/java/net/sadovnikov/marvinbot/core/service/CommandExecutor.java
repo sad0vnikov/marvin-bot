@@ -32,8 +32,7 @@ public abstract class CommandExecutor extends EventHandler<MessageEvent> {
     @Inject protected Logger logger;
 
     public final void handle(MessageEvent ev) throws PluginException {
-        CommandParser parser = injector.getInstance(CommandParser.class);
-        Command cmd = parser.parse(ev.getMessage().text());
+        Command cmd = ev.getMessage().command();
         String annotatedCommand = this.getClass().getAnnotation(net.sadovnikov.marvinbot.core.annotations.Command.class).value();
         Role requiredRole = new UserRole();
         RequiredRole roleAnnotation = this.getClass().getAnnotation(RequiredRole.class);
@@ -47,7 +46,7 @@ public abstract class CommandExecutor extends EventHandler<MessageEvent> {
         }
         PermissionChecker permissionChecker = injector.getInstance(PermissionChecker.class);
         boolean userHasRequiredRole = permissionChecker.checkPermissionsByMessage(ev.getMessage(), requiredRole);
-        boolean commandDetected = cmd != null && annotatedCommand != null && cmd.getCommand().equals(annotatedCommand);
+        boolean commandDetected = ev.getMessage().isCommand() && annotatedCommand != null && cmd.getCommand().equals(annotatedCommand);
         if (commandDetected && userHasRequiredRole) {
             execute(cmd, ev);
         } else if (commandDetected && !userHasRequiredRole) {
