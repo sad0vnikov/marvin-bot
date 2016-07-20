@@ -1,7 +1,7 @@
 package repositories;
 
 
-import net.sadovnikov.marvinbot.core.db.repository.GlobalPluginOption;
+import net.sadovnikov.marvinbot.core.db.FakeDbService;
 import net.sadovnikov.marvinbot.core.db.repository.PluginChatOption;
 import net.sadovnikov.marvinbot.core.db.repository.PluginOption;
 import org.bson.BsonDocument;
@@ -21,7 +21,7 @@ public class ChatPluginOptionTest {
 
     @Test
     public void testGetAllQuery() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        PluginOption option = new PluginChatOption("someChatId", "someTestPlugin");
+        PluginOption option = new PluginChatOption(new FakeDbService(), "someChatId", "someTestPlugin");
         Method testAllQueryMethod = PluginChatOption.class.getDeclaredMethod("makeGetAllQuery");
         testAllQueryMethod.setAccessible(true);
         BsonDocument result = encodingFilterToBsonDoc( (Bson) testAllQueryMethod.invoke(option) );
@@ -34,7 +34,7 @@ public class ChatPluginOptionTest {
 
     @Test
     public void testGetByNameQuery()  throws NoSuchMethodException, IllegalAccessException, InvocationTargetException  {
-        PluginOption option = new PluginChatOption("someChatId", "someTestPlugin");
+        PluginOption option = new PluginChatOption(new FakeDbService(), "someChatId", "someTestPlugin");
         Method queryMethod = PluginChatOption.class.getDeclaredMethod("makeSearchByNameQuery", String.class);
         queryMethod.setAccessible(true);
 

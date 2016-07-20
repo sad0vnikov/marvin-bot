@@ -1,5 +1,6 @@
 package net.sadovnikov.marvinbot.api;
 
+import net.sadovnikov.marvinbot.core.db.MongoDbService;
 import net.sadovnikov.marvinbot.core.db.repository.GlobalPluginOption;
 import net.sadovnikov.marvinbot.core.db.repository.PluginChatOption;
 import net.sadovnikov.marvinbot.core.service.contact.ContactManager;
@@ -16,14 +17,16 @@ public class BotPluginApi {
     protected ContactManager contactManager;
     protected String pluginName;
     protected Locale locale;
+    protected MongoDbService db;
 
     public BotPluginApi(MessageSenderService messageSender, ContactManager contactManager,
-                        String pluginName, Locale locale) {
+                        String pluginName, Locale locale, MongoDbService db) {
 
         this.messageSender  = messageSender;
         this.contactManager = contactManager;
         this.pluginName     = pluginName;
         this.locale         = locale;
+        this.db             = db;
     }
 
     public MessageSenderService message() {
@@ -47,11 +50,11 @@ public class BotPluginApi {
         }
 
         public GlobalPluginOption global() {
-            return new GlobalPluginOption(pluginName);
+            return new GlobalPluginOption(db, pluginName);
         }
 
         public PluginChatOption chat(String chatId) {
-            return new PluginChatOption(chatId, pluginName);
+            return new PluginChatOption(db, chatId, pluginName);
         }
     }
 

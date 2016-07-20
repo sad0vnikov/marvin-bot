@@ -11,9 +11,6 @@
 
     <artifactId>marvin-core</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>api</module>
-    </modules>
 
     <properties>
         <main.class>net.sadovnikov.marvinbot.core.main.Main</main.class>
@@ -143,6 +140,13 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.fakemongo</groupId>
+            <artifactId>fongo</artifactId>
+            <version>2.0.6</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

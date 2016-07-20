@@ -1,6 +1,8 @@
 package net.sadovnikov.marvinbot.core.db.repository;
 
 import com.mongodb.client.MongoCollection;
+import net.sadovnikov.marvinbot.core.db.DbService;
+import net.sadovnikov.marvinbot.core.db.MongoDbService;
 import org.bson.Document;
 import static com.mongodb.client.model.Filters.*;
 import org.bson.conversions.Bson;
@@ -12,7 +14,8 @@ import org.bson.conversions.Bson;
 public class GlobalPluginOption extends PluginOption {
 
 
-    public GlobalPluginOption(String pluginName) {
+    public GlobalPluginOption(DbService db, String pluginName) {
+        super(db);
         this.pluginName = pluginName;
     }
 

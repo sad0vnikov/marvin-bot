@@ -1,16 +1,13 @@
 package repositories;
 
 
+import net.sadovnikov.marvinbot.core.db.FakeDbService;
 import net.sadovnikov.marvinbot.core.db.repository.GlobalPluginOption;
 import net.sadovnikov.marvinbot.core.db.repository.PluginOption;
 import org.bson.BsonDocument;
 import org.bson.BsonString;
-import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.DocumentCodec;
 import org.bson.codecs.StringCodec;
 import org.bson.codecs.configuration.CodecRegistries;
-import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.junit.Test;
 import static junit.framework.Assert.*;
@@ -22,7 +19,7 @@ public class PluginOptionTest {
 
     @Test
     public void testGetAllQuery() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        PluginOption option = new GlobalPluginOption("someTestPlugin");
+        PluginOption option = new GlobalPluginOption(new FakeDbService(), "someTestPlugin");
         Method testAllQueryMethod = GlobalPluginOption.class.getDeclaredMethod("makeGetAllQuery");
         testAllQueryMethod.setAccessible(true);
         BsonDocument result = encodingFilterToBsonDoc( (Bson) testAllQueryMethod.invoke(option) );
@@ -33,7 +30,7 @@ public class PluginOptionTest {
 
     @Test
     public void testGetByNameQuery()  throws NoSuchMethodException, IllegalAccessException, InvocationTargetException  {
-        PluginOption option = new GlobalPluginOption("someTestPlugin");
+        PluginOption option = new GlobalPluginOption(new FakeDbService(), "someTestPlugin");
         Method queryMethod = GlobalPluginOption.class.getDeclaredMethod("makeSearchByNameQuery", String.class);
         queryMethod.setAccessible(true);
 

@@ -2,7 +2,9 @@ package net.sadovnikov.marvinbot.core.db.repository;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import net.sadovnikov.marvinbot.core.db.DbService;
+import net.sadovnikov.marvinbot.core.db.MongoDbService;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -17,8 +19,8 @@ public class PluginChatOption extends GlobalPluginOption {
 
     String chatId;
 
-    public PluginChatOption(String chatId, String pluginName) {
-        super(pluginName);
+    public PluginChatOption(DbService db, String chatId, String pluginName) {
+        super(db, pluginName);
         this.chatId = chatId;
     }
 
@@ -57,8 +59,8 @@ public class PluginChatOption extends GlobalPluginOption {
 
     @Override
     protected MongoCollection<Document> getCollection() {
-        DbService d = db;
-        return db.getDb().getCollection("chat_plugin_options");
+        MongoDatabase database = db.getDb();
+        return database.getCollection("chat_plugin_options");
     }
 
 }

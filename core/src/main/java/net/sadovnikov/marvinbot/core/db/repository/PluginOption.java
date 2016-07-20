@@ -1,11 +1,11 @@
 package net.sadovnikov.marvinbot.core.db.repository;
 
 
-import com.google.inject.Inject;
-import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBList;
 import com.mongodb.client.MongoCollection;
 import net.sadovnikov.marvinbot.core.db.DbException;
 import net.sadovnikov.marvinbot.core.db.DbService;
+import net.sadovnikov.marvinbot.core.db.MongoDbService;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import static com.mongodb.client.model.Filters.*;
@@ -15,11 +15,13 @@ import java.util.*;
 public abstract class PluginOption {
 
 
-    @Inject
     protected DbService db;
 
     protected String pluginName;
 
+    public PluginOption(DbService db) {
+        this.db = db;
+    }
 
     protected abstract Document createOption(String name, Object value);
 
@@ -73,12 +75,11 @@ public abstract class PluginOption {
     }
 
     public List<String> getValuesList(String name) throws DbException {
-        Document doc = getDocument(name);
-        if (doc == null) {
-            return null;
-        }
+        Document option = getDocument(name);
 
-        return doc.get(name, List.class);
+        List<String> valuesList = (ArrayList<String>) option.get("value");
+
+        return valuesList;
     }
 
     public Map<String,String> getAll() throws DbException {

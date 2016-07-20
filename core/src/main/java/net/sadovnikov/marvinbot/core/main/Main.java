@@ -7,7 +7,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import net.sadovnikov.marvinbot.core.config.ConfigException;
 import net.sadovnikov.marvinbot.core.config.ConfigLoader;
-import net.sadovnikov.marvinbot.core.db.DbService;
+import net.sadovnikov.marvinbot.core.db.MongoDbService;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
 import net.sadovnikov.marvinbot.core.injection.PluginManagerInjector;
 import net.sadovnikov.marvinbot.core.injection.ConfigInjector;
@@ -35,7 +35,7 @@ public class Main {
             return;
         }
 
-        DbService dbService;
+        MongoDbService dbService;
         logger.debug("connecting to db");
         try {
             String dbHost = config.getParam("marvinBot.dbHost");
@@ -45,7 +45,7 @@ public class Main {
             logger.debug("db dbPort: " + dbPort);
             logger.debug("using db: " + dbName);
 
-            dbService = new DbService(dbHost, dbPort, dbName);
+            dbService = new MongoDbService(dbHost, dbPort, dbName);
             dbService.ping();
             logger.info("Connected to db on " + dbHost + ":" + dbPort);
         } catch (Throwable e) {

@@ -3,6 +3,7 @@ package net.sadovnikov.marvinbot.core.main;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.sadovnikov.marvinbot.api.BotPluginApi;
+import net.sadovnikov.marvinbot.core.db.MongoDbService;
 import net.sadovnikov.marvinbot.core.service.contact.ContactManager;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderService;
 import org.apache.logging.log4j.LogManager;
@@ -75,7 +76,8 @@ public class PluginLoader {
                         injector.getInstance(MessageSenderService.class),
                         injector.getInstance(ContactManager.class),
                         plugin.getPluginName(),
-                        appLocale
+                        appLocale,
+                        injector.getInstance(MongoDbService.class)
                     );
 
                 plugin.init(pluginApiFacade);
