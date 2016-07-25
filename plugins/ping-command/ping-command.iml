@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4">
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
@@ -10,18 +10,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="core" scope="PROVIDED" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: ro.fortsoft.pf4j:pf4j:0.13.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.zafarkhaja:java-semver:0.9.0" level="project" />
-    <orderEntry type="module" module-name="core" scope="PROVIDED" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.samczsun:skype4j:0.1.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.logging.log4j:log4j-api:2.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.logging.log4j:log4j-core:2.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.inject:guice:3.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.inject:javax.inject:1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: aopalliance:aopalliance:1.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.mongodb:mongodb-driver:3.2.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.mongodb:mongodb-driver-core:3.2.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.mongodb:bson:3.2.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: net.sadovnikov.marvin-skype-bot:api:0.1-SNAPSHOT" level="project" />
   </component>
 </module>
