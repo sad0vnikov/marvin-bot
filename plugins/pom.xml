@@ -28,7 +28,7 @@
 
         <dependency>
             <groupId>net.sadovnikov.marvin-skype-bot</groupId>
-            <artifactId>api</artifactId>
+            <artifactId>marvin-core</artifactId>
             <version>0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
