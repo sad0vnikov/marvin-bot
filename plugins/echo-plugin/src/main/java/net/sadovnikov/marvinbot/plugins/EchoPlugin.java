@@ -3,7 +3,6 @@ package net.sadovnikov.marvinbot.plugins;
 import net.sadovnikov.marvinbot.core.db.DbException;
 import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
 import net.sadovnikov.marvinbot.core.service.CommandExecutor;
-import net.sadovnikov.marvinbot.core.service.CommandParser;
 import net.sadovnikov.marvinbot.core.annotations.Command;
 import net.sadovnikov.marvinbot.core.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
