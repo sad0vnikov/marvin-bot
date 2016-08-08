@@ -77,7 +77,10 @@ public abstract class PluginOption {
     public List<String> getValuesList(String name) throws DbException {
         Document option = getDocument(name);
 
-        List<String> valuesList = (ArrayList<String>) option.get("value");
+        List<String> valuesList = new ArrayList<>();
+        if (option != null) {
+            valuesList = (ArrayList<String>) option.get("value");
+        }
 
         return valuesList;
     }
