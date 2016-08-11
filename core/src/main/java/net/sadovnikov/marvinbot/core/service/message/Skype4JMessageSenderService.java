@@ -7,9 +7,12 @@ import com.samczsun.skype4j.chat.messages.ChatMessage;
 import com.samczsun.skype4j.exceptions.ChatNotFoundException;
 import com.samczsun.skype4j.exceptions.ConnectionException;
 import com.samczsun.skype4j.formatting.Text;
+import net.sadovnikov.marvinbot.core.domain.message.Attachment;
 import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
 import net.sadovnikov.marvinbot.core.domain.message.SentMessage;
 import org.apache.logging.log4j.LogManager;
+
+import java.io.IOException;
 
 public class Skype4JMessageSenderService extends MessageSenderService {
 
@@ -26,12 +29,27 @@ public class Skype4JMessageSenderService extends MessageSenderService {
 
         try {
             Chat chat = skype.getOrLoadChat(message.recepientId());
-            ChatMessage skype4jMessage = chat.sendMessage(toSend);
-            SentMessage sentMessage    = new SentMessage(skype4jMessage.getId(), message.recepientId(), message.text());
+
+            String messageId = null;
+
+            if (message.text().length() > 0) {
+                ChatMessage skype4jMessage = chat.sendMessage(toSend);
+                messageId = skype4jMessage.getId();
+            }
+
+            SentMessage sentMessage = new SentMessage(messageId, message.recepientId(), message.text());
+
+            for (Attachment attachment : message.attachments()) {
+                if (attachment.isImage()) {
+                    chat.sendImage(attachment.file());
+                    continue;
+                }
+                chat.sendFile(attachment.file());
+            }
 
             return sentMessage;
 
-        } catch (ConnectionException e) {
+        } catch (ConnectionException | IOException e) {
             e.printStackTrace();
             throw new MessageSenderException(e);
         } catch (ChatNotFoundException e) {
