@@ -16,6 +16,7 @@
         <module>echo-plugin</module>
         <module>git-notifier-plugin</module>
         <module>ping-command</module>
+        <module>xkcd-plugin</module>
     </modules>
 
     <dependencies>
