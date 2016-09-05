@@ -35,7 +35,7 @@ public class EchoPlugin extends Plugin {
             String msgText = ev.getMessage().text();
             try {
                 boolean isEchoingOn = marvin.pluginOptions().chat(chatId).get("enableEcho", "off").equals("on");
-                boolean isCommand   = ev.getMessage().isCommand(); // is net.sadovnikov.marvinbot.core.domain.message a valid bot command
+                boolean isCommand   = ev.getMessage().isCommand(); // is message a valid bot command
                 if (isEchoingOn && !isCommand) {
                     MessageToSend message = new MessageToSend(msgText, chatId);
                     marvin.message().send(message);

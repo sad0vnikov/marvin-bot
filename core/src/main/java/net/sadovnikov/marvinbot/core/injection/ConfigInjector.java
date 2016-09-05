@@ -16,8 +16,15 @@ public class ConfigInjector  extends AbstractModule {
         this.cfg = cfg;
     }
 
+    protected static final String DEFAULT_LOCALE = "EN";
+
     public void configure() {
-        bind(Locale.class).toInstance(new Locale("EN"));
+        String locale = DEFAULT_LOCALE;
+        String configLocale = cfg.getParam("marvinBot.locale");
+        if (configLocale != null) {
+            locale = configLocale;
+        }
+        bind(Locale.class).  toInstance(new Locale(locale));
         bindConstant().annotatedWith(Names.named("commandPrefix")).to(cfg.getParam("marvinBot.commandPrefix"));
         bindConstant().annotatedWith(Names.named("admins")).to(cfg.getParam("marvinBot.admins"));
     }

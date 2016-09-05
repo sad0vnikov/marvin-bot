@@ -7,6 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ro.fortsoft.pf4j.PluginWrapper;
 
+import java.util.ResourceBundle;
+
 public abstract class Plugin extends ro.fortsoft.pf4j.Plugin {
 
     protected BotPluginApi marvin;
@@ -22,6 +24,10 @@ public abstract class Plugin extends ro.fortsoft.pf4j.Plugin {
 
     public final String getPluginName() {
         return this.getClass().getCanonicalName();
+    }
+
+    public ResourceBundle getLocaleBundle() {
+        return ResourceBundle.getBundle("plugin_loc_data", marvin.getLocale());
     }
 
     public void init(BotPluginApi marvin) {
