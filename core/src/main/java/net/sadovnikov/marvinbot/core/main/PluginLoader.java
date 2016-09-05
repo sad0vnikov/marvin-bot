@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.sadovnikov.marvinbot.api.BotPluginApi;
 import net.sadovnikov.marvinbot.core.db.MongoDbService;
+import net.sadovnikov.marvinbot.core.schedule.TasksSchedule;
 import net.sadovnikov.marvinbot.core.service.contact.ContactManager;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderService;
 import org.apache.logging.log4j.LogManager;
@@ -77,7 +78,8 @@ public class PluginLoader {
                         injector.getInstance(ContactManager.class),
                         plugin.getPluginName(),
                         appLocale,
-                        injector.getInstance(MongoDbService.class)
+                        injector.getInstance(MongoDbService.class),
+                        new TasksSchedule()
                     );
 
                 plugin.init(pluginApiFacade);

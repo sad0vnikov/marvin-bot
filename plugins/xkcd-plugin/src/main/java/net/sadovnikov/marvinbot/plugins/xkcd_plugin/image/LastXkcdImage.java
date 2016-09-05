@@ -26,7 +26,7 @@ public class LastXkcdImage implements XkcdImage {
     protected String description;
 
     /**
-     * The newest bytes will be loaded
+     * The newest image will be loaded
      */
     public LastXkcdImage() throws IOException {
         URL dataUrl = getComicsDataUrl();
