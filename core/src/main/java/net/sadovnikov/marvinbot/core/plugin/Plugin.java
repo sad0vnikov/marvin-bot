@@ -26,10 +26,6 @@ public abstract class Plugin extends ro.fortsoft.pf4j.Plugin {
         return this.getClass().getCanonicalName();
     }
 
-    public ResourceBundle getLocaleBundle() {
-        return ResourceBundle.getBundle("plugin_loc_data", marvin.getLocale());
-    }
-
     public void init(BotPluginApi marvin) {
         this.marvin = marvin;
     }

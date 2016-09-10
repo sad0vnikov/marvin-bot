@@ -17,6 +17,7 @@
         <module>git-notifier-plugin</module>
         <module>ping-command</module>
         <module>xkcd-plugin</module>
+        <module>friday-plugin</module>
     </modules>
 
     <dependencies>

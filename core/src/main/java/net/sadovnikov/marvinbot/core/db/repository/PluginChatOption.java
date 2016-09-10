@@ -13,7 +13,7 @@ import java.util.*;
 import static com.mongodb.client.model.Filters.*;
 
 /**
- * A plugin option for concrete chat
+ * A plugins option for concrete chat
  */
 public class PluginChatOption extends GlobalPluginOption {
 

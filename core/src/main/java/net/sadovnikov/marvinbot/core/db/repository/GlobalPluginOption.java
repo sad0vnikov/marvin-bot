@@ -9,7 +9,7 @@ import org.bson.conversions.Bson;
 
 
 /**
- * A global plugin option
+ * A global plugins option
  */
 public class GlobalPluginOption extends PluginOption {
 
