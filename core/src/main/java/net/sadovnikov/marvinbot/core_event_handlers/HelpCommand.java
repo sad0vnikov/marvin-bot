@@ -1,6 +1,7 @@
 package net.sadovnikov.marvinbot.core_event_handlers;
 
 import com.google.inject.Inject;
+import net.sadovnikov.marvinbot.core.misc.Utf8Control;
 import net.sadovnikov.marvinbot.core.service.CommandExecutor;
 import net.sadovnikov.marvinbot.core.annotations.Command;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
@@ -27,7 +28,7 @@ public class HelpCommand extends CommandExecutor {
     @Inject
     public HelpCommand(MessageSenderService sender, PluginLoader pluginLoader, Locale locale, Logger logger) {
         this.sender = sender;
-        this.locData = ResourceBundle.getBundle("loc_data_main", locale);
+        this.locData = ResourceBundle.getBundle("loc_data_main", locale, new Utf8Control());
         this.pluginManager = pluginLoader.getPluginManager();
         this.logger = logger;
     }

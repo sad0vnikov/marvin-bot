@@ -92,7 +92,7 @@ public class FridayPlugin extends Plugin {
             String[] emojiis = new String[]{"(celebrate)", "(beer)", "(monkey)", "(holidayspirit)", "(party)"};
             int randomIndex = new Random().nextInt(emojiis.length);
 
-            String text = ResourceBundle.getBundle("plugin_loc_data", marvin.getLocale()).getString("friday_greeting");
+            String text = getLocaleBundle().getString("friday_greeting");
             text += " " + emojiis[randomIndex];
 
             return text;

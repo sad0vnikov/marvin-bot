@@ -1,7 +1,6 @@
 package net.sadovnikov.marvinbot.plugins;
 
 
-import com.google.inject.Inject;
 import net.sadovnikov.marvinbot.core.domain.Command;
 import net.sadovnikov.marvinbot.core.service.CommandExecutor;
 import net.sadovnikov.marvinbot.core.annotations.RequiredRole;
@@ -49,12 +48,12 @@ public class  PingCommand extends Plugin {
         }
 
         public String getHelp() {
-            locData = ResourceBundle.getBundle("loc_data_main", marvin.getLocale());
+            locData = getLocaleBundle();
             return locData.getString("helpString");
         }
 
         public String getUsage() {
-            return "Usage: " + commandPrefix + "ping";
+            return commandPrefix + "ping";
         }
     }
 }

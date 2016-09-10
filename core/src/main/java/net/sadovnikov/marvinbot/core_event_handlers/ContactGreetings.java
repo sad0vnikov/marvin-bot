@@ -1,6 +1,7 @@
 package net.sadovnikov.marvinbot.core_event_handlers;
 
 import com.google.inject.Inject;
+import net.sadovnikov.marvinbot.core.misc.Utf8Control;
 import net.sadovnikov.marvinbot.core.service.contact.ContactManager;
 import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
@@ -25,7 +26,7 @@ public class ContactGreetings extends EventHandler<ContactRequestEvent> {
     public ContactGreetings(ContactManager contactManager, MessageSenderService messageSenderService, Locale locale, Logger logger) {
         this.contactManager = contactManager;
         this.messageSenderService = messageSenderService;
-        this.locData = ResourceBundle.getBundle("loc_data_main", locale);
+        this.locData = ResourceBundle.getBundle("loc_data_main", locale, new Utf8Control());
         this.logger = logger;
     }
 

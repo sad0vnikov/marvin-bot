@@ -131,16 +131,16 @@ public class GitNotifierPlugin extends Plugin {
 
                     if (addr.contains("bitbucket")) {
                         addRepository(chatId, addr);
-                        marvin.message().reply(ev.getMessage(), "Repository added");
+                        marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("repositoryAdded"));
                     } else {
-                        marvin.message().reply(ev.getMessage(), "Only bitbucket repositories are supported now");
+                        marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("repositoryTypeRestrictions"));
                     }
 
                 }
 
                 if (args[0].equals("remove")) {
                     removeRepository(chatId, addr);
-                    marvin.message().reply(ev.getMessage(), "Repository removed");
+                    marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("repositoryRemoved"));
                 }
 
             } catch (MessageSenderException e) {
@@ -182,6 +182,11 @@ public class GitNotifierPlugin extends Plugin {
             } catch (DbException e) {
                 logger.catching(e);
             }
+        }
+
+        @Override
+        public String getHelp() {
+            return getLocaleBundle().getString("pluginHelp");
         }
 
         public String getUsage() {

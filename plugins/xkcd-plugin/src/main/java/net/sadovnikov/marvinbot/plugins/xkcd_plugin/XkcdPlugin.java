@@ -94,6 +94,16 @@ public class XkcdPlugin extends Plugin {
             }
 
         }
+
+        @Override
+        public String getHelp() {
+            return getLocaleBundle().getString("pluginHelp");
+        }
+
+        @Override
+        public String getUsage() {
+            return commandPrefix + "xkcd [on|off|last]";
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
 import net.sadovnikov.marvinbot.core.events.event_types.BotJoinedChatEvent;
+import net.sadovnikov.marvinbot.core.misc.Utf8Control;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderService;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderException;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +23,7 @@ public class BotJoinsChatGreeting extends EventHandler<BotJoinedChatEvent> {
     @Inject
     public BotJoinsChatGreeting(MessageSenderService messageSenderService, Locale locale, Logger logger) {
         this.messageSenderService = messageSenderService;
-        this.locData = ResourceBundle.getBundle("loc_data_main", locale);
+        this.locData = ResourceBundle.getBundle("loc_data_main", locale, new Utf8Control());
         this.logger  = logger;
     }
 

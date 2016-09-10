@@ -9,6 +9,7 @@ import net.sadovnikov.marvinbot.core.domain.user.Role;
 import net.sadovnikov.marvinbot.core.domain.user.UserRole;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
+import net.sadovnikov.marvinbot.core.misc.Utf8Control;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderService;
 import net.sadovnikov.marvinbot.core.service.permissions.PermissionChecker;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
@@ -64,7 +65,7 @@ public abstract class CommandExecutor extends EventHandler<MessageEvent> {
     public abstract void execute(Command cmd, MessageEvent ev) throws PluginException;
 
     public String getHelp() {
-        ResourceBundle locData = ResourceBundle.getBundle("loc_data_main", locale);
+        ResourceBundle locData = ResourceBundle.getBundle("loc_data_main", locale, new Utf8Control());
         return locData.getString("noHelpAvailableForCommand");
     }
 

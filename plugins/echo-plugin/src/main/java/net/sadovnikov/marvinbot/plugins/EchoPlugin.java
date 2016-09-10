@@ -66,10 +66,10 @@ public class EchoPlugin extends Plugin {
             try {
                 if ( args[0].equals("on")) {
                     marvin.pluginOptions().chat(chatId).set("enableEcho", "on");
-                    marvin.message().reply(ev.getMessage(), "Echoing is turned on!");
+                    marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("echoTurnedOn"));
                 } else if ( args[0].equals("off")) {
                     marvin.pluginOptions().chat(chatId).set("enableEcho", "off");
-                    marvin.message().reply(ev.getMessage(), "Echoing is turned off");
+                    marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("echoTurnedOff"));
                 }
             } catch (MessageSenderException | DbException e) {
                 logger.catching(e);
@@ -77,6 +77,12 @@ public class EchoPlugin extends Plugin {
 
 
         }
+
+        public String getHelp() {
+            return getLocaleBundle().getString("helpString");
+        }
+
     }
+
 
 }
