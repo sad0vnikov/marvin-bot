@@ -1,4 +1,4 @@
-package net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers;
+package net.sadovnikov.marvinbot.plugins.git_notifier_plugin.webhook_catchers;
 
 
 public class Commit {

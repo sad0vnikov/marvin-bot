@@ -1,21 +1,22 @@
-package net.sadovnikov.marbinbot.plugins.git_notifier_plugin;
+package net.sadovnikov.marvinbot.plugins.git_notifier_plugin;
 
-import com.google.inject.Inject;
-import com.sun.net.httpserver.*;
-import net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers.BitbucketWebhookCatcher;
-import net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers.Commit;
-import net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers.WebhookCatcher;
+import com.sun.net.httpserver.HttpExchange;
+import net.sadovnikov.marvinbot.plugins.http_server.HttpEndpoint;
+import net.sadovnikov.marvinbot.plugins.http_server.HttpHandler;
+import net.sadovnikov.marvinbot.plugins.git_notifier_plugin.webhook_catchers.BitbucketWebhookCatcher;
+import net.sadovnikov.marvinbot.plugins.git_notifier_plugin.webhook_catchers.Commit;
+import net.sadovnikov.marvinbot.plugins.git_notifier_plugin.webhook_catchers.WebhookCatcher;
 import net.sadovnikov.marvinbot.core.db.DbException;
 import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
 import net.sadovnikov.marvinbot.core.service.CommandExecutor;
 import net.sadovnikov.marvinbot.core.annotations.Command;
 import net.sadovnikov.marvinbot.core.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
-import net.sadovnikov.marvinbot.core.domain.message.SentMessage;
 import net.sadovnikov.marvinbot.core.domain.user.ChatModeratorRole;
 import net.sadovnikov.marvinbot.core.plugin.Plugin;
-import net.sadovnikov.marvinbot.core.plugin.PluginException;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderException;
+import net.sadovnikov.marvinbot.plugins.http_server.HttpRequest;
+import net.sadovnikov.marvinbot.plugins.http_server.HttpResponse;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import ro.fortsoft.pf4j.Extension;
@@ -36,40 +37,16 @@ public class GitNotifierPlugin extends Plugin {
     }
 
 
-    public void start() {
-        HttpListener listener = new HttpListener();
-        listener.start();
-    }
 
-    protected class HttpListener extends Thread {
-
-        public void run() {
-            try {
-                HttpServer server = HttpServer.create(new InetSocketAddress(DEFAULT_PORT), 0);
-                server.createContext("/", new WebhookHandler());
-                server.start();
-            } catch (IOException e) {
-                logger.catching(e);
-            }
-        }
-    }
-
-
-    protected class WebhookHandler implements HttpHandler
+    @HttpEndpoint("/git-webhooks")
+    @Extension
+    public class WebhookHandler extends HttpHandler
     {
 
         @Override
-        public void handle(HttpExchange httpExchange) throws IOException {
+        public HttpResponse handle(HttpRequest request) {
             try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody()));
-                String requestBody = "";
-                while (true) {
-                    String line = in.readLine();
-                    if (line == null) {
-                        break;
-                    }
-                    requestBody += line;
-                }
+                String requestBody = request.getBody();
                 logger.debug("incoming HTTP request (body: " + requestBody  + ")");
                 JSONParser jsonParser = new JSONParser();
                 JSONObject obj = (JSONObject) jsonParser.parse(requestBody);
@@ -96,15 +73,13 @@ public class GitNotifierPlugin extends Plugin {
                     }
                 }
                 String responseBody = "<html><body>ok</body></html>";
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(httpExchange.getResponseBody()));
-                httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, responseBody.length());
-                out.write(responseBody);
-                out.flush();
-                httpExchange.close();
+                return new HttpResponse(responseBody);
 
             } catch (Exception e) {
                 logger.catching(e);
             }
+
+            return new HttpResponse("<html><body>an internal error occured</body></html>", HttpResponse.STATUS_INTERNAL_ERROR);
         }
 
     }

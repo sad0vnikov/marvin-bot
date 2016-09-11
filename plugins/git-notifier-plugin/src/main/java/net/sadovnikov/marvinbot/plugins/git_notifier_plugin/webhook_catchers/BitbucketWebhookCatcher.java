@@ -1,6 +1,5 @@
-package net.sadovnikov.marbinbot.plugins.git_notifier_plugin.webhook_catchers;
+package net.sadovnikov.marvinbot.plugins.git_notifier_plugin.webhook_catchers;
 
-import com.eclipsesource.json.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
