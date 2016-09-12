@@ -81,4 +81,27 @@ public class BitbucketWebhookCatcher extends WebhookCatcher {
     }
 
 
+    public Set<String> getAffectedBranches() {
+
+        JSONObject push = (JSONObject) request.get("push");
+        JSONArray changes = (JSONArray) push.get("changes");
+        Iterator<JSONObject> changesIterator = changes.iterator();
+
+        Set<String> affectedBranches = new HashSet<>();
+        while (changesIterator.hasNext()) {
+            JSONObject ch = changesIterator.next();
+            JSONObject n = (JSONObject) ch.get("new");
+
+            String branch = null;
+            if (n != null) {
+                branch = (String) n.get("name");
+            }
+
+            if (branch != null) {
+                affectedBranches.add(branch);
+            }
+        }
+
+        return affectedBranches;
+    }
 }

@@ -59,7 +59,10 @@ public class GitNotifierPlugin extends Plugin {
 
                     Commit[] commits = catcher.getPushedCommits();
                     String message = " === " + pushInfo.get("initiator") + " pushed ";
-                    if (commits.length > 0) {
+
+                    Set<String> affectedBranches = catcher.getAffectedBranches();
+
+                    if (commits.length > 0 && affectedBranches.contains("master")) {
                         message += String.valueOf(commits.length) + " commits to " + pushInfo.get("repository") + ": ===\n";
                         for (int i = 0; i < commits.length; i++) {
                             message += commits[i].getHash() + " " + commits[i].getUser() + "\n    " + commits[i].getMessage() + "\n";
