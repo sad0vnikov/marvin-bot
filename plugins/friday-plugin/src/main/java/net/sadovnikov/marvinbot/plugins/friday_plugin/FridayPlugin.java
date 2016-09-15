@@ -37,14 +37,14 @@ public class FridayPlugin extends Plugin {
 
         LocalDateTime friday;
 
-        if (currentTime.getDayOfWeek().equals(DayOfWeek.SATURDAY) && currentTime.getHour() <= RUN_HOUR && currentTime.getMinute() < RUN_MINUTES) {
+        if (currentTime.getDayOfWeek().equals(DayOfWeek.FRIDAY) && currentTime.getHour() <= RUN_HOUR && currentTime.getMinute() < RUN_MINUTES) {
             friday = currentTime;
         // if it's already friday and the time the bot should have told about that have already passed:
-        } else if (currentTime.getDayOfWeek().equals(DayOfWeek.SATURDAY) && currentTime.getHour() >= RUN_HOUR && currentTime.getMinute() >= RUN_MINUTES) {
+        } else if (currentTime.getDayOfWeek().equals(DayOfWeek.FRIDAY) && currentTime.getHour() >= RUN_HOUR && currentTime.getMinute() >= RUN_MINUTES) {
             task.run();
             return;
         } else {
-            friday = currentTime.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
+            friday = currentTime.with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
         }
 
         friday = friday.withHour(RUN_HOUR).withMinute(RUN_MINUTES).withSecond(0);
