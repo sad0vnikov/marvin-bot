@@ -14,7 +14,7 @@
 
     <modules>
         <module>echo-plugin</module>
-        <module>http-listener</module>
+        <module>http-server</module>
         <module>git-notifier-plugin</module>
         <module>ping-command</module>
         <module>xkcd-plugin</module>

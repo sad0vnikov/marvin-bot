@@ -16,7 +16,6 @@ import net.sadovnikov.marvinbot.plugins.xkcd_plugin.image.RandomXkcdImage;
 import net.sadovnikov.marvinbot.plugins.xkcd_plugin.image.XkcdImage;
 import ro.fortsoft.pf4j.Extension;
 import ro.fortsoft.pf4j.PluginWrapper;
-import sun.plugin.dom.exception.PluginNotSupportedException;
 
 import java.io.IOException;
 import java.util.Date;
