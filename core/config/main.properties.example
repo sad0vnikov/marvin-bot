@@ -1,7 +1,9 @@
-login=bot
-password=password
-commandPrefix=!
-dbHost=localhost
-dbPort=27017
-dbName=marvin-bot
-admins=skype_username1,skype_username2
+#Skype connection properties
+marvinBot.login=skype_login
+marvinBot.password=secret
+marvinBot.commandPrefix=!
+marvinBot.dbHost=127.0.0.1
+marvinBot.dbPort=27017
+marvinBot.dbName=marvin-bot
+marvinBot.locale=EN
+marvinBot.admins=admin_login_1,admin_login_2
