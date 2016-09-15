@@ -22,8 +22,8 @@ public class FridayPlugin extends Plugin {
         super(wrapper);
     }
 
-    private final int RUN_HOUR = 17;
-    private final int RUN_MINUTES = 12;
+    private final int RUN_HOUR = 12;
+    private final int RUN_MINUTES = 0;
 
     @Override
     public void start() throws PluginException {
