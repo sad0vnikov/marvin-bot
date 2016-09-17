@@ -1,6 +1,5 @@
 package net.sadovnikov.marvinbot.plugins.git_notifier_plugin;
 
-import com.sun.net.httpserver.HttpExchange;
 import net.sadovnikov.marvinbot.plugins.http_server.HttpEndpoint;
 import net.sadovnikov.marvinbot.plugins.http_server.HttpHandler;
 import net.sadovnikov.marvinbot.plugins.git_notifier_plugin.webhook_catchers.BitbucketWebhookCatcher;
@@ -17,14 +16,13 @@ import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderException;
 import net.sadovnikov.marvinbot.plugins.http_server.HttpRequest;
 import net.sadovnikov.marvinbot.plugins.http_server.HttpResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import ro.fortsoft.pf4j.Extension;
 import ro.fortsoft.pf4j.PluginWrapper;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
+
 import java.util.*;
 
 
@@ -97,28 +95,43 @@ public class GitNotifierPlugin extends Plugin {
             String[] args = command.getArgs();
 
             try {
-                if (args.length != 2 || (!args[0].equals("add") && !args[0].equals("remove"))) {
-                    marvin.message().reply(ev.getMessage(), getUsage());
-                    return;
-                }
 
                 String chatId = ev.getMessage().chatId();
-                String addr = args[1];
+                Optional<String> action = Optional.empty();
+                if (args.length > 0) {
+                    action = Optional.of(args[0]);
+                }
+                Optional<String> addr = Optional.empty();
+                if (args.length > 1) {
+                    addr = Optional.of(args[1]);
+                }
 
-                if (args[0].equals("add")) {
+                if (action.isPresent() && action.get().equals("add") && addr.isPresent()) {
 
-                    if (addr.contains("bitbucket")) {
-                        addRepository(chatId, addr);
+                    if (addr.get().contains("bitbucket")) {
+                        addRepository(chatId, addr.get());
                         marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("repositoryAdded"));
                     } else {
                         marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("repositoryTypeRestrictions"));
                     }
 
-                }
-
-                if (args[0].equals("remove")) {
-                    removeRepository(chatId, addr);
+                } else if (action.isPresent() && action.get().equals("remove") && addr.isPresent()) {
+                    removeRepository(chatId, addr.get());
                     marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("repositoryRemoved"));
+
+                } else if (action.isPresent() && action.get().equals("list")) {
+                    Set<String> repositories = getChatRepsList(chatId);
+                    String msgText;
+                    if (repositories.size() == 0) {
+                        msgText = getLocaleBundle().getString("repositoriesListIsEmpty");
+                    } else {
+                        String repsList = StringUtils.join(repositories.iterator(), "\n");
+                        msgText = getLocaleBundle().getString("repositoriesList") + "\n" + repsList;
+                    }
+
+                    marvin.message().reply(ev.getMessage(), msgText);
+                } else {
+                    marvin.message().reply(ev.getMessage(), getUsage());
                 }
 
             } catch (MessageSenderException e) {
@@ -168,7 +181,7 @@ public class GitNotifierPlugin extends Plugin {
         }
 
         public String getUsage() {
-            return  "Usage: " + commandPrefix + "git-notifier add [repository_url]";
+            return  "Usage: " + commandPrefix + "git-notifier add | remove | list";
         }
     }
 }
