@@ -19,6 +19,7 @@ import ro.fortsoft.pf4j.PluginWrapper;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -77,18 +78,22 @@ public class XkcdPlugin extends Plugin {
 
             String chatId = ev.getMessage().chatId();
             try {
-                String[] args = cmd.getArgs();
-                if (args.length == 0) {
+                Optional<String> action = cmd.action();
+                if (!action.isPresent()) {
                     sendRandomImg(chatId);
-                } else if (args.length == 1 && args[0].equals("last")) {
+                } else if (action.get().equals("last")) {
                     sendLastImage(chatId);
-                } else if (args.length == 1 && args[0].equals("on")) {
+                } else if (action.get().equals("on")) {
                     marvin.pluginOptions().chat(ev.getMessage().chatId()).set("checking_enabled", "on");
+                    String messageText = getLocaleBundle().getString("sending_new_comics_enabled");
+                    marvin.message().reply(ev.getMessage(), messageText);
                     addTaskForCheckingImages(ev.getMessage().chatId());
-                } else if (args.length == 1 && args[0].equals("off")) {
+                } else if (action.get().equals("off")) {
                     marvin.pluginOptions().chat(ev.getMessage().chatId()).set("checking_enabled", "off");
+                    String messageText = getLocaleBundle().getString("sending_new_comics_disabled");
+                    marvin.message().reply(ev.getMessage(), messageText);
                 }
-            } catch (IOException | DbException e) {
+            } catch (IOException | DbException | MessageSenderException e) {
                 throw new PluginException(e);
             }
 
