@@ -18,12 +18,15 @@ import java.util.ResourceBundle;
 
 public class FridayPlugin extends Plugin {
 
+
     public FridayPlugin(PluginWrapper wrapper) {
         super(wrapper);
     }
 
     private final int RUN_HOUR = 12;
     private final int RUN_MINUTES = 0;
+    private static final DayOfWeek FRIDAY = DayOfWeek.FRIDAY;
+
 
     @Override
     public void start() throws PluginException {
@@ -37,14 +40,14 @@ public class FridayPlugin extends Plugin {
 
         LocalDateTime friday;
 
-        if (currentTime.getDayOfWeek().equals(DayOfWeek.FRIDAY) && currentTime.getHour() <= RUN_HOUR && currentTime.getMinute() < RUN_MINUTES) {
+        if (currentTime.getDayOfWeek().equals(FRIDAY) && currentTime.getHour() <= RUN_HOUR && currentTime.getMinute() < RUN_MINUTES) {
             friday = currentTime;
         // if it's already friday and the time the bot should have told about that have already passed:
-        } else if (currentTime.getDayOfWeek().equals(DayOfWeek.FRIDAY) && currentTime.getHour() >= RUN_HOUR && currentTime.getMinute() >= RUN_MINUTES) {
+        } else if (currentTime.getDayOfWeek().equals(FRIDAY) && currentTime.getHour() >= RUN_HOUR && currentTime.getMinute() >= RUN_MINUTES) {
             task.run();
             return;
         } else {
-            friday = currentTime.with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
+            friday = currentTime.with(TemporalAdjusters.next(FRIDAY));
         }
 
         friday = friday.withHour(RUN_HOUR).withMinute(RUN_MINUTES).withSecond(0);
