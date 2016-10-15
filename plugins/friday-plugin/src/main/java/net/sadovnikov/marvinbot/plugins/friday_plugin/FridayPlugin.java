@@ -11,10 +11,8 @@ import ro.fortsoft.pf4j.PluginWrapper;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Random;
-import java.util.ResourceBundle;
 
 public class FridayPlugin extends Plugin {
 
@@ -36,7 +34,7 @@ public class FridayPlugin extends Plugin {
 
     public void addScheduledTask() {
         LocalDateTime currentTime = LocalDateTime.now();
-        Task task = new FridayGreetingClass();
+        Task task = new FridayGreetingTask();
 
         LocalDateTime friday;
 
@@ -45,7 +43,7 @@ public class FridayPlugin extends Plugin {
         // if it's already friday and the time the bot should have told about that have already passed:
         } else if (currentTime.getDayOfWeek().equals(FRIDAY) && currentTime.getHour() >= RUN_HOUR && currentTime.getMinute() >= RUN_MINUTES) {
             task.run();
-            return;
+            friday = currentTime.plusWeeks(1);
         } else {
             friday = currentTime.with(TemporalAdjusters.next(FRIDAY));
         }
@@ -57,7 +55,7 @@ public class FridayPlugin extends Plugin {
     }
 
 
-    public class FridayGreetingClass extends Task {
+    public class FridayGreetingTask extends Task {
 
         protected final String LAST_GREET_KEY = "last_greet_date";
 
