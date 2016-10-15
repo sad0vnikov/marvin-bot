@@ -1,0 +1,20 @@
+version: '2'
+services:
+    bot:
+        image: sad0vnikov/marvin-bot
+        restart: unless-stopped
+        ports:
+            - "8080:8080"
+        depends_on:
+            - marvin-db
+        links:
+            - marvin-db
+        env_file: config.env
+
+    marvin-db:
+        image: mongo
+        restart: unless-stopped
+        volumes:
+          - ./db:/data/db
+        ports:
+          - "27017:27017"

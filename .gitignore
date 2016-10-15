@@ -16,3 +16,4 @@ hs_err_pid*
 .idea
 
 net.sadovnikov.marvinbot.core.config/*.properties
+*.env
