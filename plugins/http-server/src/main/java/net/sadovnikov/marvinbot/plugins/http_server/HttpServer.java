@@ -1,6 +1,7 @@
 package net.sadovnikov.marvinbot.plugins.http_server;
 
 import net.sadovnikov.marvinbot.core.plugin.Plugin;
+import org.apache.logging.log4j.LogManager;
 import ro.fortsoft.pf4j.PluginException;
 import ro.fortsoft.pf4j.PluginWrapper;
 
@@ -22,9 +23,9 @@ public class HttpServer extends Plugin {
 
     @Override
     public void start() throws PluginException {
-        List<HttpHandler> handlers = wrapper.getPluginManager().getExtensions(HttpHandler.class);
         httpServer.createContext("/", new HttpListener(wrapper.getPluginManager()));
         httpServer.start();
+//        LogManager.getLogger(getClass()).info("started HTTP server on " + DEFAULT_HTTP_PORT);
     }
 
     @Override

@@ -28,8 +28,6 @@ import java.util.*;
 
 public class GitNotifierPlugin extends Plugin {
 
-    private final int DEFAULT_PORT = 8080;
-
     public GitNotifierPlugin(PluginWrapper pluginWrapper) {
         super(pluginWrapper);
     }
@@ -38,8 +36,7 @@ public class GitNotifierPlugin extends Plugin {
 
     @HttpEndpoint("/git-webhooks")
     @Extension
-    public class WebhookHandler extends HttpHandler
-    {
+    public class WebhookHandler extends HttpHandler {
 
         @Override
         public HttpResponse handle(HttpRequest request) {

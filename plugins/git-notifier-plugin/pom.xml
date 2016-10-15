@@ -17,7 +17,7 @@
         <plugin.class>net.sadovnikov.marvinbot.plugins.git_notifier_plugin.GitNotifierPlugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>Alexander Sadovnikov</plugin.provider>
-        <plugin.dependencies></plugin.dependencies>
+        <plugin.dependencies>http-server</plugin.dependencies>
     </properties>
 
     <build>
@@ -127,6 +127,8 @@
             <groupId>net.sadovnikov.marvin-skype-bot</groupId>
             <artifactId>http-server</artifactId>
             <version>0.1.0</version>
+            <scope>provided</scope>
         </dependency>
+
     </dependencies>
 </project>
