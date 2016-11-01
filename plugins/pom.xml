@@ -19,6 +19,7 @@
         <module>ping-command</module>
         <module>xkcd-plugin</module>
         <module>friday-plugin</module>
+        <module>custom-notification-webhooks</module>
     </modules>
 
     <dependencies>

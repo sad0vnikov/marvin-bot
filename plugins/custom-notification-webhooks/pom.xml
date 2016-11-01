@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>plugins</artifactId>
+        <groupId>net.sadovnikov.marvin-skype-bot</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>custom-notification-webhooks</artifactId>
+    <version>1.0.0</version>
+
+    <properties>
+        <plugin.id>${project.artifactId}</plugin.id>
+        <plugin.class>net.sadovnikov.marvinbot.plugins.custom_notification_webhooks.CustomNotificationPlugin</plugin.class>
+        <plugin.version>${project.version}</plugin.version>
+        <plugin.provider>Alexander Sadovnikov</plugin.provider>
+        <plugin.dependencies>http-server</plugin.dependencies>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>unzip jar file</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <unzip src="target/${artifactId}-${version}.${packaging}" dest="target/plugin-classes" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>
+                                run
+                            </goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-artifact</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>zip</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>../../core/target/marvin-core-current/plugins</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Plugin-Id>${plugin.id}</Plugin-Id>
+                            <Plugin-Class>${plugin.class}</Plugin-Class>
+                            <Plugin-Version>${plugin.version}</Plugin-Version>
+                            <Plugin-Provider>${plugin.provider}</Plugin-Provider>
+                            <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sadovnikov.marvin-skype-bot</groupId>
+            <artifactId>http-server</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+    </dependencies>
+
+
+</project>
