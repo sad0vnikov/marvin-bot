@@ -24,6 +24,12 @@ public class PluginChatOption extends GlobalPluginOption {
         this.chatId = chatId;
     }
 
+    /**
+     * Returns chats list which have a given option and the option has given value
+     * @param optionName
+     * @param value
+     * @return
+     */
     public Set<String> findChatswithOptionValues(String optionName, Object value) {
 
         HashSet<String> list = new HashSet<>();
@@ -38,6 +44,29 @@ public class PluginChatOption extends GlobalPluginOption {
         }
 
         return list;
+    }
+
+    /**
+     * Returns chats list which have a given option and the option has given values.
+     * If a value is array, all the given values must be present
+     * @param optionName
+     * @param values
+     * @return
+     */
+    public Set<String> findChatsOptionValuesIn(String optionName, Object[] values) {
+
+        HashSet<String> chats = new HashSet<>();
+        FindIterable result = getCollection().find(
+            and(eq("pluginName", pluginName), eq("name", optionName), in("value", values))
+        );
+
+        Iterator resultIterator = result.iterator();
+        while (resultIterator.hasNext()) {
+            Document option = (Document) resultIterator.next();
+            chats.add(option.getString("chatId"));
+        }
+
+        return chats;
     }
 
     @Override
