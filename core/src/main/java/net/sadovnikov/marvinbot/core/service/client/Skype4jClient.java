@@ -24,13 +24,13 @@ public class Skype4jClient extends Client {
         try {
             skype.login();
             skype.subscribe();
+            setVisible();
         } catch (InvalidCredentialsException | NotParticipatingException | ConnectionException e) {
             throw new ClientException(e);
         }
     }
 
-    @Override
-    public void setVisible() {
+    protected void setVisible() {
         try {
             skype.setVisibility(Visibility.ONLINE);
         } catch (ConnectionException e) {
@@ -45,11 +45,6 @@ public class Skype4jClient extends Client {
         } catch (ConnectionException e) {
             throw new ClientException(e);
         }
-    }
-
-    @Override
-    public void setStatusText() throws ClientException {
-        throw new ClientException("now implemented yet");
     }
 
     public Skype getSkype4jInstance() {

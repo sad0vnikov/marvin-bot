@@ -1,7 +1,8 @@
 package net.sadovnikov.marvinbot.core.main;
 
 
-import net.sadovnikov.marvinbot.core.injection.LoggerInjector;
+import net.sadovnikov.marvinbot.core.injection.*;
+import net.sadovnikov.marvinbot.core.service.client.BotFrameworkClient;
 import net.sadovnikov.marvinbot.core.service.client.Skype4jClient;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -9,9 +10,6 @@ import net.sadovnikov.marvinbot.core.config.ConfigException;
 import net.sadovnikov.marvinbot.core.config.ConfigLoader;
 import net.sadovnikov.marvinbot.core.db.MongoDbService;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
-import net.sadovnikov.marvinbot.core.injection.PluginManagerInjector;
-import net.sadovnikov.marvinbot.core.injection.ConfigInjector;
-import net.sadovnikov.marvinbot.core.injection.Skype4jInjector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,24 +53,22 @@ public class Main {
             return;
         }
 
-        String skypeLogin    = config.getParam("marvinBot.login");
-        String skypePassword = config.getParam("marvinBot.password");
+        String appId     = config.getParam("marvinBot.appId");
+        String appSecret = config.getParam("marvinBot.secret");
 
-        logger.debug("connecting to Skype using login: " + skypeLogin);
 
-        Skype4jClient skypeClient = new Skype4jClient(skypeLogin, skypePassword);
+        BotFrameworkClient client = new BotFrameworkClient(appId, appSecret);
         Injector injector = Guice.createInjector(
-                new Skype4jInjector(skypeClient.getSkype4jInstance()),
+                new BotFrameworkInjector(client.getBotInstance()),
                 new PluginManagerInjector(),
                 new ConfigInjector(config),
                 new net.sadovnikov.marvinbot.core.injection.Db(dbService),
                 new LoggerInjector(logger)
         );
 
-        skypeClient.connect();
-        skypeClient.setVisible();
+        client.connect();
 
-        logger.info("logged in successfully (skype login " + skypeLogin +  ")");
+        logger.info("logged in successfully (skype login " + appId +  ")");
 
         EventDispatcher dispatcher = injector.getInstance(EventDispatcher.class);
         injector.getInstance(PluginLoader.class).loadPlugins();
