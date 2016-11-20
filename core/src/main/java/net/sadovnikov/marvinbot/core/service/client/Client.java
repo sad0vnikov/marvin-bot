@@ -1,6 +1,6 @@
 package net.sadovnikov.marvinbot.core.service.client;
 
-public abstract class SkypeClient {
+public abstract class Client {
 
     public abstract void connect() throws ClientException;
 

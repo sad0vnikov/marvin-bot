@@ -10,7 +10,7 @@ import com.samczsun.skype4j.exceptions.NotParticipatingException;
 /**
  * This is a skype net.sadovnikov.marvinbot.core.service.client implementation whilch uses Skype4j lib
  */
-public class Skype4jClient extends SkypeClient {
+public class Skype4jClient extends Client {
 
     private Skype skype;
 
