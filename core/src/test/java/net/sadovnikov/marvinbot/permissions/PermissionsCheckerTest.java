@@ -1,7 +1,6 @@
-package permissions;
+package net.sadovnikov.marvinbot.permissions;
 
 
-import com.samczsun.skype4j.user.User;
 import net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage;
 import net.sadovnikov.marvinbot.core.domain.user.AdminRole;
 import net.sadovnikov.marvinbot.core.domain.user.ChatModeratorRole;

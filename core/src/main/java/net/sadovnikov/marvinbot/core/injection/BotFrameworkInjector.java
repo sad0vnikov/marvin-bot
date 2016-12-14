@@ -6,6 +6,7 @@ import net.sadovnikov.marvinbot.core.events.EventDispatcher;
 import net.sadovnikov.marvinbot.core.events.event_dispatchers.BotFrameworkEventDispatcher;
 import net.sadovnikov.marvinbot.core.events.event_dispatchers.Skype4jEventDispatcher;
 import net.sadovnikov.marvinbot.core.service.contact.BotFrameworkContactManager;
+import net.sadovnikov.marvinbot.core.service.contact.CachingContactManager;
 import net.sadovnikov.marvinbot.core.service.contact.ContactManager;
 import net.sadovnikov.marvinbot.core.service.contact.Skype4jContactManager;
 import net.sadovnikov.marvinbot.core.service.message.BotFrameworkMessageSenderService;
@@ -28,6 +29,7 @@ public class BotFrameworkInjector extends AbstractModule {
         bind(MessageSenderService.class).to(BotFrameworkMessageSenderService.class);
         bind(EventDispatcher.class).to(BotFrameworkEventDispatcher.class);
         bind(ContactManager.class).to(BotFrameworkContactManager.class);
+        bind(CachingContactManager.class).to(BotFrameworkContactManager.class);
         bind(PermissionChecker.class).to(Skype4jPermissionChecker.class);
         bind(Bot.class).toInstance(this.bot);
     }

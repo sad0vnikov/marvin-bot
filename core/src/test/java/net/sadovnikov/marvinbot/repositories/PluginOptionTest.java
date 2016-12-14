@@ -1,4 +1,4 @@
-package repositories;
+package net.sadovnikov.marvinbot.repositories;
 
 
 import net.sadovnikov.marvinbot.core.db.FakeDbService;

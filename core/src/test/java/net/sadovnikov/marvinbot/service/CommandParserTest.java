@@ -1,4 +1,4 @@
-package service;
+package net.sadovnikov.marvinbot.service;
 
 
 

@@ -20,6 +20,6 @@ public abstract class ContactManager {
 
     public Collection<AbstractChat> getGroupChats() throws SkypeApiException {
         return getAllChats().stream()
-                .filter(c -> c.isGroupChat()).collect(Collectors.toSet());
+                .filter(c -> c.isGroupChat()).collect(Collectors.toList());
     }
 }
