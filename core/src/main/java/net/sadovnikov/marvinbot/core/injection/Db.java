@@ -1,6 +1,7 @@
 package net.sadovnikov.marvinbot.core.injection;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import net.sadovnikov.marvinbot.core.db.DbService;
 import net.sadovnikov.marvinbot.core.db.MongoDbService;
 import net.sadovnikov.marvinbot.core.db.repository.ActiveChatsRepository;
@@ -16,7 +17,11 @@ public class Db extends AbstractModule {
     }
 
     public void configure() {
-        bind(DbService.class).toInstance(dbService);
         bind(ActiveChatsRepository.class).to(DbActiveChatsRepository.class);
+    }
+
+    @Provides
+    public DbService getDb() {
+        return dbService;
     }
 }

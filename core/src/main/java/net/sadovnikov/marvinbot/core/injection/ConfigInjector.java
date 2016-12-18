@@ -27,5 +27,10 @@ public class ConfigInjector  extends AbstractModule {
         bind(Locale.class).  toInstance(new Locale(locale));
         bindConstant().annotatedWith(Names.named("commandPrefix")).to(cfg.getParam("marvinBot.commandPrefix"));
         bindConstant().annotatedWith(Names.named("admins")).to(cfg.getParam("marvinBot.admins"));
+        bindConstant().annotatedWith(Names.named("dbHost")).to(cfg.getParam("marvinBot.dbHost"));
+        bindConstant().annotatedWith(Names.named("dbPort")).to(cfg.getParam("marvinBot.dbPort"));
+        bindConstant().annotatedWith(Names.named("dbName")).to(cfg.getParam("marvinBot.dbName"));
+
+
     }
 }

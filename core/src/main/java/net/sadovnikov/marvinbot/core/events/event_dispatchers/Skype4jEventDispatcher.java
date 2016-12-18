@@ -45,7 +45,7 @@ public class Skype4jEventDispatcher extends EventDispatcher {
                 skype4jMessage.getChat().getIdentity();
                 String chatId = skype4jMessage.getChat().getIdentity();
 
-                LogManager.getLogger("core-logger").info("new net.sadovnikov.marvinbot.core.domain.message from " + chatId + ": " + msgContent);
+                LogManager.getLogger("core-logger").info("new message from " + chatId + ": " + msgContent);
 
                 String userName = skype4jMessage.getSender().getUsername();
 

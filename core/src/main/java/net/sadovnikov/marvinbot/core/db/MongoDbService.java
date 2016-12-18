@@ -11,7 +11,8 @@ public class MongoDbService extends DbService {
     protected MongoClient client;
     protected String defaultDb;
 
-    public MongoDbService(String dbHost, String dbPort, String defaultDb) {
+    @Inject
+    public MongoDbService(@Named("dbHost") String dbHost, @Named("dbPort") String dbPort, @Named("dbName") String defaultDb) {
         this.client = new MongoClient(dbHost, Integer.parseInt(dbPort));
         this.defaultDb = defaultDb;
     }
