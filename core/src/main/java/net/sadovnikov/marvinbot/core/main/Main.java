@@ -23,7 +23,7 @@ public class Main {
 
 
         ConfigLoader config;
-        logger.debug("loging config at " + configPath);
+        logger.debug("loading config at " + configPath);
         try {
             config = new ConfigLoader(configPath);
             logger.info("loaded net.sadovnikov.marvinbot.core.config from " + configPath);
