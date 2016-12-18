@@ -10,11 +10,14 @@ import com.samczsun.skype4j.events.chat.ChatJoinedEvent;
 import com.samczsun.skype4j.events.chat.ChatQuitEvent;
 import com.samczsun.skype4j.events.chat.message.MessageReceivedEvent;
 import com.samczsun.skype4j.exceptions.ConnectionException;
+import net.sadovnikov.marvinbot.core.domain.Channel;
+import net.sadovnikov.marvinbot.core.domain.ChannelTypes;
 import net.sadovnikov.marvinbot.core.domain.Command;
 import net.sadovnikov.marvinbot.core.domain.Contact;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
 import net.sadovnikov.marvinbot.core.events.event_types.*;
 import net.sadovnikov.marvinbot.core.service.CommandParser;
+import net.sadovnikov.marvinbot.core.service.chat.Chat;
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -51,8 +54,9 @@ public class Skype4jEventDispatcher extends EventDispatcher {
 
                 CommandParser parser = injector.getInstance(CommandParser.class);
                 Command cmd = parser.parse(msgContent);
+                Chat chat = new Chat(new Channel(ChannelTypes.SKYPE), chatId);
 
-                net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage msg = new net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage(chatId, userName, msgContent, cmd);
+                net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage msg = new net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage(chat, userName, msgContent, cmd);
                 dispatch(new MessageEvent(msg));
             }
 
@@ -72,7 +76,8 @@ public class Skype4jEventDispatcher extends EventDispatcher {
             public void onChatJoinEvent(ChatJoinedEvent ev) {
                 String chatId = ev.getChat().getIdentity();
                 String initiatorName = ev.getInitiator().getUsername();
-                dispatch(new BotJoinedChatEvent(chatId, initiatorName));
+                Chat chat = new Chat(new Channel(ChannelTypes.SKYPE), chatId);
+                dispatch(new BotJoinedChatEvent(chat, initiatorName));
                 LogManager.getLogger("core-logger").info("joined chat " + chatId);
             }
 
@@ -80,7 +85,8 @@ public class Skype4jEventDispatcher extends EventDispatcher {
             public void onChatQuitEvent(ChatQuitEvent ev) {
                 String chatId = ev.getChat().getIdentity();
                 String initiatorName = ev.getInitiator().getUsername();
-                dispatch(new BotLeftChatEvent(chatId, initiatorName));
+                Chat chat = new Chat(new Channel(ChannelTypes.SKYPE), chatId);
+                dispatch(new BotLeftChatEvent(chat, initiatorName));
                 LogManager.getLogger("core-logger").info("left chat " + chatId);
             }
         });

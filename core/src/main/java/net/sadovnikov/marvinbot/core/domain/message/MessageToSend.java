@@ -1,26 +1,35 @@
 package net.sadovnikov.marvinbot.core.domain.message;
 
 
+import net.sadovnikov.marvinbot.core.domain.Channel;
+import net.sadovnikov.marvinbot.core.service.chat.AbstractChat;
+import net.sadovnikov.marvinbot.core.service.chat.Chat;
+
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
 public class MessageToSend extends Message {
 
-    private String recepientId;
+    private AbstractChat chat;
     private Set<Attachment> attachments = new HashSet<>();
+    private Channel channel;
 
-    public MessageToSend(String text, String chatId) {
+    public MessageToSend(String text, AbstractChat chat) {
         this.text = text;
-        this.recepientId = chatId;
+        this.chat = chat;
     }
 
-    public String recepientId() {
-        return this.recepientId;
+    public AbstractChat chat() {
+        return this.chat;
     }
 
     public String text() {
         return this.text;
+    }
+
+    public Channel channel() {
+        return this.channel;
     }
 
     public Set<Attachment> attachments() {
@@ -44,7 +53,7 @@ public class MessageToSend extends Message {
     }
 
     public boolean equals(MessageToSend message) {
-        return message.text().equals(text) && message.recepientId().equals(recepientId);
+        return message.text().equals(text) && message.chat().equals(chat);
     }
 
 }

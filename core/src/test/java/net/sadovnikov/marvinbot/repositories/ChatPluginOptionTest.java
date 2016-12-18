@@ -4,6 +4,9 @@ package net.sadovnikov.marvinbot.repositories;
 import net.sadovnikov.marvinbot.core.db.FakeDbService;
 import net.sadovnikov.marvinbot.core.db.repository.PluginChatOption;
 import net.sadovnikov.marvinbot.core.db.repository.PluginOption;
+import net.sadovnikov.marvinbot.core.domain.Channel;
+import net.sadovnikov.marvinbot.core.domain.ChannelTypes;
+import net.sadovnikov.marvinbot.core.service.chat.Chat;
 import org.bson.BsonDocument;
 import org.bson.BsonString;
 import org.bson.codecs.StringCodec;
@@ -21,7 +24,8 @@ public class ChatPluginOptionTest {
 
     @Test
     public void testGetAllQuery() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        PluginOption option = new PluginChatOption(new FakeDbService(), "someChatId", "someTestPlugin");
+        Chat chat = new Chat(new Channel(ChannelTypes.SKYPE), "someChatId");
+        PluginOption option = new PluginChatOption(new FakeDbService(), chat, "someTestPlugin");
         Method testAllQueryMethod = PluginChatOption.class.getDeclaredMethod("makeGetAllQuery");
         testAllQueryMethod.setAccessible(true);
         BsonDocument result = encodingFilterToBsonDoc( (Bson) testAllQueryMethod.invoke(option) );
@@ -34,7 +38,8 @@ public class ChatPluginOptionTest {
 
     @Test
     public void testGetByNameQuery()  throws NoSuchMethodException, IllegalAccessException, InvocationTargetException  {
-        PluginOption option = new PluginChatOption(new FakeDbService(), "someChatId", "someTestPlugin");
+        Chat chat = new Chat(new Channel(ChannelTypes.SKYPE), "someChatId");
+        PluginOption option = new PluginChatOption(new FakeDbService(), chat, "someTestPlugin");
         Method queryMethod = PluginChatOption.class.getDeclaredMethod("makeSearchByNameQuery", String.class);
         queryMethod.setAccessible(true);
 

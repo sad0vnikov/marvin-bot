@@ -1,9 +1,11 @@
 package net.sadovnikov.marvinbot.core.service.chat;
 
+import net.sadovnikov.marvinbot.core.domain.Channel;
+
 public class GroupChat extends Chat {
 
-    public GroupChat(String chatId) {
-        super(chatId);
+    public GroupChat(Channel channel, String chatId) {
+        super(channel, chatId);
     }
 
     @Override

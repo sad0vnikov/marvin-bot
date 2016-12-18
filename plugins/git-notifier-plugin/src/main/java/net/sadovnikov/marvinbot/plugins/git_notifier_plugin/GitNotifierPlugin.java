@@ -1,5 +1,7 @@
 package net.sadovnikov.marvinbot.plugins.git_notifier_plugin;
 
+import net.sadovnikov.marvinbot.core.service.chat.AbstractChat;
+import net.sadovnikov.marvinbot.core.service.chat.Chat;
 import net.sadovnikov.marvinbot.plugins.http_server.HttpEndpoint;
 import net.sadovnikov.marvinbot.plugins.http_server.HttpHandler;
 import net.sadovnikov.marvinbot.plugins.git_notifier_plugin.webhook_catchers.BitbucketWebhookCatcher;
@@ -63,8 +65,8 @@ public class GitNotifierPlugin extends Plugin {
                             message += commits[i].getHash() + " " + commits[i].getUser() + "\n    " + commits[i].getMessage() + "\n";
                         }
 
-                        for (String chatId : marvin.pluginOptions().chat(null).findChatswithOptionValues("repositories_to_notify", repName)) {
-                            MessageToSend msgObj = new MessageToSend(message, chatId);
+                        for (AbstractChat chat : marvin.pluginOptions().chat(null).findChatswithOptionValues("repositories_to_notify", repName)) {
+                            MessageToSend msgObj = new MessageToSend(message, chat);
                             marvin.message().send(msgObj);
                         }
 
@@ -93,7 +95,7 @@ public class GitNotifierPlugin extends Plugin {
 
             try {
 
-                String chatId = ev.getMessage().chatId();
+                Chat chat = ev.getMessage().chat();
                 Optional<String> action = Optional.empty();
                 if (args.length > 0) {
                     action = Optional.of(args[0]);
@@ -106,18 +108,18 @@ public class GitNotifierPlugin extends Plugin {
                 if (action.isPresent() && action.get().equals("add") && addr.isPresent()) {
 
                     if (addr.get().contains("bitbucket")) {
-                        addRepository(chatId, addr.get());
+                        addRepository(chat, addr.get());
                         marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("repositoryAdded"));
                     } else {
                         marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("repositoryTypeRestrictions"));
                     }
 
                 } else if (action.isPresent() && action.get().equals("remove") && addr.isPresent()) {
-                    removeRepository(chatId, addr.get());
+                    removeRepository(chat, addr.get());
                     marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("repositoryRemoved"));
 
                 } else if (action.isPresent() && action.get().equals("list")) {
-                    Set<String> repositories = getChatRepsList(chatId);
+                    Set<String> repositories = getChatRepsList(chat);
                     String msgText;
                     if (repositories.size() == 0) {
                         msgText = getLocaleBundle().getString("repositoriesListIsEmpty");
@@ -137,23 +139,23 @@ public class GitNotifierPlugin extends Plugin {
 
         }
 
-        protected void addRepository(String chatId, String addr) {
-            Set<String> repositories = getChatRepsList(chatId);
+        protected void addRepository(Chat chat, String addr) {
+            Set<String> repositories = getChatRepsList(chat);
             repositories.add(addr);
-            saveChatRepsList(chatId, repositories);
+            saveChatRepsList(chat, repositories);
         }
 
-        protected void removeRepository(String chatId, String addr) {
-            Set<String> repositories = getChatRepsList(chatId);
+        protected void removeRepository(Chat chat, String addr) {
+            Set<String> repositories = getChatRepsList(chat);
             repositories.remove(addr);
-            saveChatRepsList(chatId, repositories);
+            saveChatRepsList(chat, repositories);
         }
 
-        protected Set<String> getChatRepsList(String chatId) {
+        protected Set<String> getChatRepsList(Chat chat) {
             try {
 
                 List<String> valuesList = marvin.pluginOptions()
-                        .chat(chatId)
+                        .chat(chat)
                         .getValuesList("repositories_to_notify");
 
                 return new HashSet<>(valuesList);
@@ -164,9 +166,9 @@ public class GitNotifierPlugin extends Plugin {
             }
         }
 
-        protected void saveChatRepsList(String chatId, Set<String> list) {
+        protected void saveChatRepsList(Chat chat, Set<String> list) {
             try {
-                marvin.pluginOptions().chat(chatId).set("repositories_to_notify", new ArrayList<>(list));
+                marvin.pluginOptions().chat(chat).set("repositories_to_notify", new ArrayList<>(list));
             } catch (DbException e) {
                 logger.catching(e);
             }

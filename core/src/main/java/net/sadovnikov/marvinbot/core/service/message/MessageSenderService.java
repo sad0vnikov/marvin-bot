@@ -10,7 +10,7 @@ public abstract class MessageSenderService {
 
     public SentMessage reply(ReceivedMessage message, String text) throws MessageSenderException {
         String recepientId = message.chatId();
-        MessageToSend outMessage = new MessageToSend(text, recepientId);
+        MessageToSend outMessage = new MessageToSend(text, message.chat());
 
         return send(outMessage);
     }

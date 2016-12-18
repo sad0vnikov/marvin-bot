@@ -4,6 +4,8 @@ import net.sadovnikov.marvinbot.core.db.MongoDbService;
 import net.sadovnikov.marvinbot.core.db.repository.GlobalPluginOption;
 import net.sadovnikov.marvinbot.core.db.repository.PluginChatOption;
 import net.sadovnikov.marvinbot.core.schedule.TasksSchedule;
+import net.sadovnikov.marvinbot.core.service.chat.AbstractChat;
+import net.sadovnikov.marvinbot.core.service.chat.Chat;
 import net.sadovnikov.marvinbot.core.service.contact.ContactManager;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderService;
 
@@ -56,9 +58,11 @@ public class BotPluginApi {
             return new GlobalPluginOption(db, pluginName);
         }
 
-        public PluginChatOption chat(String chatId) {
-            return new PluginChatOption(db, chatId, pluginName);
+        public PluginChatOption chat(AbstractChat chat) {
+            return new PluginChatOption(db, chat, pluginName);
         }
+
+        public PluginChatOption chat() { return new PluginChatOption(db, pluginName);}
     }
 
     public Locale getLocale() {

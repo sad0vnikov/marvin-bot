@@ -3,6 +3,8 @@ package net.sadovnikov.marvinbot.core.service.contact;
 import com.google.inject.Inject;
 import com.samczsun.skype4j.Skype;
 import com.samczsun.skype4j.exceptions.ConnectionException;
+import net.sadovnikov.marvinbot.core.domain.Channel;
+import net.sadovnikov.marvinbot.core.domain.ChannelTypes;
 import net.sadovnikov.marvinbot.core.domain.Contact;
 import net.sadovnikov.marvinbot.core.exceptions.SkypeApiException;
 import net.sadovnikov.marvinbot.core.service.chat.AbstractChat;
@@ -39,9 +41,9 @@ public class Skype4jContactManager extends ContactManager {
             Collection<com.samczsun.skype4j.chat.Chat> skypeChats = skype.loadMoreChats(100);
             for (com.samczsun.skype4j.chat.Chat chat : skypeChats) {
                 if (chat.getAllUsers().size() > 2) {
-                    chats.add(new GroupChat(chat.getIdentity()));
+                    chats.add(new GroupChat(new Channel(ChannelTypes.SKYPE), chat.getIdentity()));
                 } else {
-                    chats.add(new Chat(chat.getIdentity()));
+                    chats.add(new Chat(new Channel(ChannelTypes.SKYPE), chat.getIdentity()));
                 }
             }
 

@@ -6,6 +6,8 @@ import com.google.inject.Inject;
 import net.sadovnikov.marvinbot.TestBase;
 import net.sadovnikov.marvinbot.core.db.DbService;
 import net.sadovnikov.marvinbot.core.db.repository.ActiveChatsRepository;
+import net.sadovnikov.marvinbot.core.domain.Channel;
+import net.sadovnikov.marvinbot.core.domain.ChannelTypes;
 import net.sadovnikov.marvinbot.core.events.event_types.BotJoinedChatEvent;
 import net.sadovnikov.marvinbot.core.events.event_types.BotLeftChatEvent;
 import net.sadovnikov.marvinbot.core.exceptions.SkypeApiException;
@@ -25,8 +27,8 @@ public class CachingContactManagerTest extends TestBase {
         ActiveChatsRepository chatsRep = injector.getInstance(ActiveChatsRepository.class);
         CachingContactManager contactManager = new BotFrameworkContactManager(chatsRep);
 
-        Chat firstChat = new Chat("chat_1");
-        GroupChat secondChat = new GroupChat("chat_2");
+        Chat firstChat = new Chat(new Channel(ChannelTypes.SKYPE), "chat_1");
+        GroupChat secondChat = new GroupChat(new Channel(ChannelTypes.SKYPE), "chat_2");
 
         contactManager.setAsActive(firstChat);
         contactManager.setAsActive(secondChat);
@@ -64,12 +66,12 @@ public class CachingContactManagerTest extends TestBase {
         ActiveChatsRepository chatsRep = injector.getInstance(ActiveChatsRepository.class);
         CachingContactManager contactManager = new BotFrameworkContactManager(chatsRep);
 
-        Chat chat = new Chat("chat_1");
-        eventDispatcher.dispatch(new BotJoinedChatEvent(chat.chatId(), null));
+        Chat chat = new Chat(new Channel(ChannelTypes.SKYPE), "chat_1");
+        eventDispatcher.dispatch(new BotJoinedChatEvent(chat, null));
         Collection<AbstractChat> chats = contactManager.getAllChats();
         assertTrue(chats.contains(chat));
 
-        eventDispatcher.dispatch(new BotLeftChatEvent(chat.chatId(), null));
+        eventDispatcher.dispatch(new BotLeftChatEvent(chat, null));
         assertFalse(contactManager.getAllChats().contains(chat));
     }
 }

@@ -1,7 +1,10 @@
 package net.sadovnikov.marvinbot.core_event_handlers;
 
 import com.google.inject.Inject;
+import net.sadovnikov.marvinbot.core.domain.Channel;
+import net.sadovnikov.marvinbot.core.domain.ChannelTypes;
 import net.sadovnikov.marvinbot.core.misc.Utf8Control;
+import net.sadovnikov.marvinbot.core.service.chat.Chat;
 import net.sadovnikov.marvinbot.core.service.contact.ContactManager;
 import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
@@ -14,6 +17,9 @@ import ro.fortsoft.pf4j.Extension;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Works only with Skype4J
+ */
 @Extension
 public class ContactGreetings extends EventHandler<ContactRequestEvent> {
 
@@ -34,8 +40,8 @@ public class ContactGreetings extends EventHandler<ContactRequestEvent> {
     public void handle(ContactRequestEvent ev) {
         contactManager.authorize(ev.getContact());
         String msgText = locData.getString("chatGreeting");
-        String chatId  = ev.getContact().getName();
-        MessageToSend message = new MessageToSend(msgText, chatId);
+        Chat chat = new Chat(new Channel(ChannelTypes.SKYPE), ev.getContact().getName());
+        MessageToSend message = new MessageToSend(msgText, chat);
 
         try {
             messageSenderService.send(message);

@@ -1,16 +1,24 @@
 package net.sadovnikov.marvinbot.core.service.chat;
 
 
+import net.sadovnikov.marvinbot.core.domain.Channel;
+
 public class Chat extends AbstractChat {
 
     protected String chatId;
+    protected Channel channel;
 
-    public Chat(String chatId) {
+    public Chat(Channel channel, String chatId) {
         this.chatId = chatId;
+        this.channel = channel;
     }
 
     public String chatId() {
         return chatId;
+    }
+
+    public Channel channel() {
+        return channel;
     }
 
     @Override

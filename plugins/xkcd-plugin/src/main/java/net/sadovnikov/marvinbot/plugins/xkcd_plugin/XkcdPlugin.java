@@ -10,6 +10,8 @@ import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
 import net.sadovnikov.marvinbot.core.schedule.Task;
 import net.sadovnikov.marvinbot.core.service.CommandExecutor;
+import net.sadovnikov.marvinbot.core.service.chat.AbstractChat;
+import net.sadovnikov.marvinbot.core.service.chat.Chat;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderException;
 import net.sadovnikov.marvinbot.plugins.xkcd_plugin.image.LastXkcdImage;
 import net.sadovnikov.marvinbot.plugins.xkcd_plugin.image.RandomXkcdImage;
@@ -33,27 +35,27 @@ public class XkcdPlugin extends Plugin {
 
     public void start()
     {
-        Set<String> chatsToCheck = marvin.pluginOptions().chat("").findChatswithOptionValues("checking_enabled", "on");
-        for (String chatId : chatsToCheck) {
-            addTaskForCheckingImages(chatId);
+        Set<AbstractChat> chatsToCheck = marvin.pluginOptions().chat().findChatswithOptionValues("checking_enabled", "on");
+        for (AbstractChat chat : chatsToCheck) {
+            addTaskForCheckingImages(chat);
         }
     }
 
-    protected void sendRandomImg(String chatId) throws IOException {
+    protected void sendRandomImg(AbstractChat chat) throws IOException {
         XkcdImage randomImage = new RandomXkcdImage();
-        sendImage(randomImage, chatId);
+        sendImage(randomImage, chat);
     }
 
-    protected void sendLastImage(String chatId) throws IOException {
+    protected void sendLastImage(AbstractChat chat) throws IOException {
         XkcdImage lastImage = new LastXkcdImage();
-        sendImage(lastImage, chatId);
+        sendImage(lastImage, chat);
     }
 
-    protected void sendImage(XkcdImage image, String chatId) throws IOException {
+    protected void sendImage(XkcdImage image, AbstractChat chat) throws IOException {
         byte[] imageBytes = image.bytes();
 
         String imageDesc = image.description();
-        MessageToSend msg = new MessageToSend(imageDesc, chatId);
+        MessageToSend msg = new MessageToSend(imageDesc, chat);
         msg.addImage(imageBytes, image.name());
 
         try {
@@ -63,8 +65,8 @@ public class XkcdPlugin extends Plugin {
         }
     }
 
-    protected void addTaskForCheckingImages(String chatId) {
-        Task checkTask = new CheckNewComicsTask(marvin, logger, chatId);
+    protected void addTaskForCheckingImages(AbstractChat chat) {
+        Task checkTask = new CheckNewComicsTask(marvin, logger, chat);
         marvin.tasksSchedule().addTask(checkTask, new Date(), CHECK_INTERVAL_MILIS);
     }
 
@@ -76,20 +78,20 @@ public class XkcdPlugin extends Plugin {
         @Override
         public void execute(Command cmd, MessageEvent ev) throws PluginException {
 
-            String chatId = ev.getMessage().chatId();
+            Chat chat = ev.getMessage().chat();
             try {
                 Optional<String> action = cmd.action();
                 if (!action.isPresent()) {
-                    sendRandomImg(chatId);
+                    sendRandomImg(chat);
                 } else if (action.get().equals("last")) {
-                    sendLastImage(chatId);
+                    sendLastImage(chat);
                 } else if (action.get().equals("on")) {
-                    marvin.pluginOptions().chat(ev.getMessage().chatId()).set("checking_enabled", "on");
+                    marvin.pluginOptions().chat(ev.getMessage().chat()).set("checking_enabled", "on");
                     String messageText = getLocaleBundle().getString("sending_new_comics_enabled");
                     marvin.message().reply(ev.getMessage(), messageText);
-                    addTaskForCheckingImages(ev.getMessage().chatId());
+                    addTaskForCheckingImages(chat);
                 } else if (action.get().equals("off")) {
-                    marvin.pluginOptions().chat(ev.getMessage().chatId()).set("checking_enabled", "off");
+                    marvin.pluginOptions().chat(ev.getMessage().chat()).set("checking_enabled", "off");
                     String messageText = getLocaleBundle().getString("sending_new_comics_disabled");
                     marvin.message().reply(ev.getMessage(), messageText);
                 }

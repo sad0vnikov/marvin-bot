@@ -3,6 +3,8 @@ package net.sadovnikov.marvinbot.plugins.xkcd_plugin;
 import net.sadovnikov.marvinbot.api.BotPluginApi;
 import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
 import net.sadovnikov.marvinbot.core.schedule.Task;
+import net.sadovnikov.marvinbot.core.service.chat.AbstractChat;
+import net.sadovnikov.marvinbot.core.service.chat.Chat;
 import net.sadovnikov.marvinbot.plugins.xkcd_plugin.image.LastXkcdImage;
 import net.sadovnikov.marvinbot.plugins.xkcd_plugin.image.XkcdImage;
 import org.apache.logging.log4j.Logger;
@@ -12,12 +14,12 @@ public class CheckNewComicsTask extends Task {
 
     BotPluginApi marvin;
     Logger logger;
-    String chatId;
+    AbstractChat chat;
 
-    public CheckNewComicsTask(BotPluginApi marvin, Logger logger, String chatId) {
+    public CheckNewComicsTask(BotPluginApi marvin, Logger logger, AbstractChat chat) {
         this.marvin = marvin;
         this.logger = logger;
-        this.chatId = chatId;
+        this.chat = chat;
     }
 
     @Override
@@ -25,15 +27,15 @@ public class CheckNewComicsTask extends Task {
         try {
             XkcdImage lastImage = new LastXkcdImage();
             int imageNum = lastImage.num();
-            String lastShownImageNum = marvin.pluginOptions().chat(chatId).get("last_shown_comics_num");
+            String lastShownImageNum = marvin.pluginOptions().chat(chat).get("last_shown_comics_num");
             if (lastShownImageNum == null || imageNum > Integer.parseInt(lastShownImageNum)) {
-                MessageToSend msg = new MessageToSend(lastImage.description(), chatId);
+                MessageToSend msg = new MessageToSend(lastImage.description(), chat);
                 msg.addImage(lastImage.bytes(), lastImage.name());
 
                 marvin.message().send(msg);
             }
 
-            marvin.pluginOptions().chat(chatId).set("last_shown_comics_num", String.valueOf(imageNum));
+            marvin.pluginOptions().chat(chat).set("last_shown_comics_num", String.valueOf(imageNum));
 
         } catch (Throwable e) {
             logger.catching(e);

@@ -8,6 +8,7 @@ import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
 import net.sadovnikov.marvinbot.core.service.CommandExecutor;
+import net.sadovnikov.marvinbot.core.service.chat.AbstractChat;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderException;
 import net.sadovnikov.marvinbot.plugins.http_server.HttpEndpoint;
 import net.sadovnikov.marvinbot.plugins.http_server.HttpHandler;
@@ -60,16 +61,16 @@ public class CustomNotificationPlugin extends Plugin {
                 }
 
                 String type = (String) jsonData.get("type");
-                Set<String> chatsIds = marvin.pluginOptions().chat("")
+                Set<AbstractChat> chats = marvin.pluginOptions().chat()
                         .findChatsOptionValuesIn(NOTIFICATION_TYPES_OPTION, new String[]{ type, ALL_NOTIFICATIONS_TYPES_CMD_ARGUMENT });
 
-                for (String chatId : chatsIds) {
-                    MessageToSend messageToSend = new MessageToSend(message, chatId);
+                for (AbstractChat chat : chats) {
+                    MessageToSend messageToSend = new MessageToSend(message, chat);
                     marvin.message().send(messageToSend);
                 }
 
                 resp.put("status", "ok");
-                resp.put("message", "sent message to " + chatsIds.size() + (chatsIds.size() == 1 ? " chat" : " chats"));
+                resp.put("message", "sent message to " + chats.size() + (chats.size() == 1 ? " chat" : " chats"));
                 return new HttpResponse(resp.toJSONString());
 
             } catch (ParseException e) {
@@ -98,14 +99,14 @@ public class CustomNotificationPlugin extends Plugin {
         public void execute(net.sadovnikov.marvinbot.core.domain.Command cmd, MessageEvent ev) throws PluginException {
 
             String[] args = cmd.getArgs();
-            String chatId = ev.getMessage().chatId();
+            AbstractChat chat = ev.getMessage().chat();
             String commandResponseText;
             List<String> enabledNotificationsTypes = new ArrayList<>();
 
             try {
 
                 if (args.length == 0) {
-                    enabledNotificationsTypes = marvin.pluginOptions().chat(chatId).getValuesList(NOTIFICATION_TYPES_OPTION);
+                    enabledNotificationsTypes = marvin.pluginOptions().chat(chat).getValuesList(NOTIFICATION_TYPES_OPTION);
 
                 } else {
 
@@ -113,7 +114,7 @@ public class CustomNotificationPlugin extends Plugin {
                         enabledNotificationsTypes.add(arg);
                     }
 
-                    marvin.pluginOptions().chat(chatId).set(NOTIFICATION_TYPES_OPTION, enabledNotificationsTypes);
+                    marvin.pluginOptions().chat(chat).set(NOTIFICATION_TYPES_OPTION, enabledNotificationsTypes);
                 }
 
                 if ((enabledNotificationsTypes.size() == 1 && enabledNotificationsTypes.get(0).equals(NONE_NOTIFICATIONS_TYPES_CMD_ARGUMENT))

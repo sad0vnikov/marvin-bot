@@ -1,5 +1,7 @@
 package net.sadovnikov.marvinbot.core.service.chat;
 
+import net.sadovnikov.marvinbot.core.domain.Channel;
+
 public abstract class AbstractChat {
 
     public boolean isGroupChat() {
@@ -7,4 +9,6 @@ public abstract class AbstractChat {
     }
 
     public abstract String chatId();
+
+    public abstract Channel channel();
 }

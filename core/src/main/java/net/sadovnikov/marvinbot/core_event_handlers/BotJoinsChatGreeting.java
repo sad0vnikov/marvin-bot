@@ -28,9 +28,8 @@ public class BotJoinsChatGreeting extends EventHandler<BotJoinedChatEvent> {
     }
 
     public void handle(BotJoinedChatEvent ev) {
-        String chatId = ev.getChatId();
         String greeetingText = locData.getString("chatGreeting");
-        MessageToSend message = new MessageToSend(greeetingText, chatId);
+        MessageToSend message = new MessageToSend(greeetingText, ev.chat());
 
         try {
             messageSenderService.send(message);

@@ -5,6 +5,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import net.sadovnikov.marvinbot.core.db.DbService;
 import net.sadovnikov.marvinbot.core.db.MongoDbService;
+import net.sadovnikov.marvinbot.core.domain.Channel;
+import net.sadovnikov.marvinbot.core.domain.ChannelTypes;
+import net.sadovnikov.marvinbot.core.service.chat.AbstractChat;
+import net.sadovnikov.marvinbot.core.service.chat.Chat;
+import net.sadovnikov.marvinbot.core.service.chat.GroupChat;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -17,11 +22,15 @@ import static com.mongodb.client.model.Filters.*;
  */
 public class PluginChatOption extends GlobalPluginOption {
 
-    String chatId;
+    AbstractChat chat;
 
-    public PluginChatOption(DbService db, String chatId, String pluginName) {
+    public PluginChatOption(DbService db, AbstractChat chat, String pluginName) {
         super(db, pluginName);
-        this.chatId = chatId;
+        this.chat = chat;
+    }
+
+    public PluginChatOption(DbService db, String pluginName) {
+        super(db, pluginName);
     }
 
     /**
@@ -30,9 +39,9 @@ public class PluginChatOption extends GlobalPluginOption {
      * @param value
      * @return
      */
-    public Set<String> findChatswithOptionValues(String optionName, Object value) {
+    public Set<AbstractChat> findChatswithOptionValues(String optionName, Object value) {
 
-        HashSet<String> list = new HashSet<>();
+        HashSet<AbstractChat> list = new HashSet<>();
         FindIterable result = getCollection().find(
                 and(eq("pluginName", pluginName), eq("name", optionName), eq("value", value))
         );
@@ -40,7 +49,15 @@ public class PluginChatOption extends GlobalPluginOption {
         Iterator resultIterator = result.iterator();
         while (resultIterator.hasNext()) {
             Document option = (Document) resultIterator.next();
-            list.add(option.getString("chatId"));
+            String chatId = option.getString("chatId");
+            String channelType = option.getString("channel");
+            Channel channel = new Channel(ChannelTypes.valueOf(channelType));
+            Boolean isGroup = option.getBoolean("isGroup");
+            Chat chat = new Chat(channel, chatId);
+            if (isGroup) {
+                chat = new GroupChat(channel, chatId);
+            }
+            list.add(chat);
         }
 
         return list;
@@ -53,9 +70,9 @@ public class PluginChatOption extends GlobalPluginOption {
      * @param values
      * @return
      */
-    public Set<String> findChatsOptionValuesIn(String optionName, Object[] values) {
+    public Set<AbstractChat> findChatsOptionValuesIn(String optionName, Object[] values) {
 
-        HashSet<String> chats = new HashSet<>();
+        HashSet<AbstractChat> chats = new HashSet<>();
         FindIterable result = getCollection().find(
             and(eq("pluginName", pluginName), eq("name", optionName), in("value", values))
         );
@@ -63,7 +80,15 @@ public class PluginChatOption extends GlobalPluginOption {
         Iterator resultIterator = result.iterator();
         while (resultIterator.hasNext()) {
             Document option = (Document) resultIterator.next();
-            chats.add(option.getString("chatId"));
+            String chatId = option.getString("chatId");
+            String channelType = option.getString("channel");
+            Channel channel = new Channel(ChannelTypes.valueOf(channelType));
+            Boolean isGroup = option.getBoolean("isGroup");
+            Chat chat = new Chat(channel, chatId);
+            if (isGroup) {
+                chat = new GroupChat(channel, chatId);
+            }
+            chats.add(chat);
         }
 
         return chats;
@@ -72,18 +97,19 @@ public class PluginChatOption extends GlobalPluginOption {
     @Override
     protected Document createOption(String name, Object value) {
         Document doc = super.createOption(name, value);
-        doc.put("chatId", chatId);
+        doc.put("chatId", chat.chatId());
+        doc.put("channel", chat.channel());
         return doc;
     }
 
     @Override
     protected Bson makeSearchByNameQuery(String optName) {
-        return and(eq("pluginName", pluginName), eq("chatId", chatId), eq("name", optName));
+        return and(eq("pluginName", pluginName), eq("chatId", chat.channel()), eq("channel", chat.channel()), eq("name", optName));
     }
 
     @Override
     protected Bson makeGetAllQuery() {
-        return and(eq("pluginName", pluginName), eq("chatId", chatId));
+        return and(eq("pluginName", pluginName), eq("chatId", chat.channel()), eq("channel", chat.channel()));
     }
 
     @Override

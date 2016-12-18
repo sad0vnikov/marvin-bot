@@ -24,7 +24,7 @@ public class ChatCachingOnChatEvents {
 
         @Override
         public void handle(BotJoinedChatEvent ev) throws PluginException {
-            contactManager.setAsActive(new Chat(ev.getChatId()));
+            contactManager.setAsActive(new Chat(ev.channel(), ev.getChatId()));
         }
     }
 
@@ -40,7 +40,7 @@ public class ChatCachingOnChatEvents {
 
         @Override
         public void handle(BotLeftChatEvent ev) throws PluginException {
-            contactManager.removeFromActive(new Chat(ev.getChatId()));
+            contactManager.removeFromActive(new Chat(ev.channel(), ev.getChatId()));
         }
     }
 }

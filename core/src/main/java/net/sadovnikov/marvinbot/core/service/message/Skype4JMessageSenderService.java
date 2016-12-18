@@ -28,7 +28,7 @@ public class Skype4JMessageSenderService extends MessageSenderService {
         toSend.with(Text.plain(message.text()));
 
         try {
-            Chat chat = skype.getOrLoadChat(message.recepientId());
+            Chat chat = skype.getOrLoadChat(message.chat().chatId());
 
             String messageId = null;
 
@@ -37,7 +37,7 @@ public class Skype4JMessageSenderService extends MessageSenderService {
                 messageId = skype4jMessage.getId();
             }
 
-            SentMessage sentMessage = new SentMessage(messageId, message.recepientId(), message.text());
+            SentMessage sentMessage = new SentMessage(messageId, message.chat(), message.text());
 
             for (Attachment attachment : message.attachments()) {
                 if (attachment.isImage()) {
@@ -53,7 +53,7 @@ public class Skype4JMessageSenderService extends MessageSenderService {
             e.printStackTrace();
             throw new MessageSenderException(e);
         } catch (ChatNotFoundException e) {
-            LogManager.getLogger("core-logger").error("net.sadovnikov.marvinbot.core.domain.message sender error: chat " + message.recepientId() + " not found");
+            LogManager.getLogger("core-logger").error("net.sadovnikov.marvinbot.core.domain.message sender error: chat " + message.chat() + " not found");
             throw new MessageSenderException(e);
         }
     }

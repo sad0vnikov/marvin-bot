@@ -1,10 +1,13 @@
 package net.sadovnikov.marvinbot.permissions;
 
 
+import net.sadovnikov.marvinbot.core.domain.Channel;
+import net.sadovnikov.marvinbot.core.domain.ChannelTypes;
 import net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage;
 import net.sadovnikov.marvinbot.core.domain.user.AdminRole;
 import net.sadovnikov.marvinbot.core.domain.user.ChatModeratorRole;
 import net.sadovnikov.marvinbot.core.domain.user.UserRole;
+import net.sadovnikov.marvinbot.core.service.chat.Chat;
 import net.sadovnikov.marvinbot.core.service.permissions.PermissionChecker;
 import net.sadovnikov.marvinbot.core.service.permissions.StubbedPermissionChecker;
 import org.junit.Test;
@@ -24,11 +27,12 @@ public class PermissionsCheckerTest {
         String notUserName = "notUser";
 
         String chatId   = "chat";
+        Chat chat = new Chat(new Channel(ChannelTypes.SKYPE), chatId);
 
-        ReceivedMessage message = new ReceivedMessage(chatId, username, "msgText");
-        ReceivedMessage adminMessage = new ReceivedMessage(chatId, adminName, "msgText");
-        ReceivedMessage moderatorMessage = new ReceivedMessage(chatId, moderatorName, "msgText");
-        ReceivedMessage notUserMessage = new ReceivedMessage(chatId, notUserName, "msgText");
+        ReceivedMessage message = new ReceivedMessage(chat, username, "msgText");
+        ReceivedMessage adminMessage = new ReceivedMessage(chat, adminName, "msgText");
+        ReceivedMessage moderatorMessage = new ReceivedMessage(chat, moderatorName, "msgText");
+        ReceivedMessage notUserMessage = new ReceivedMessage(chat, notUserName, "msgText");
 
 
         PermissionChecker checker = new StubbedPermissionChecker(adminName);

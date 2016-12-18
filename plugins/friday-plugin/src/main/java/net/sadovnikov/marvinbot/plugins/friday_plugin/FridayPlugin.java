@@ -67,7 +67,7 @@ public class FridayPlugin extends Plugin {
             try {
                 for (AbstractChat chat : marvin.contact().getGroupChats()) {
 
-                    String lastGreetDateValue = marvin.pluginOptions().chat(chat.chatId()).get(LAST_GREET_KEY);
+                    String lastGreetDateValue = marvin.pluginOptions().chat(chat).get(LAST_GREET_KEY);
 
                     if (lastGreetDateValue != null) {
                         LocalDate lastGreetDate = LocalDate.parse(lastGreetDateValue);
@@ -77,10 +77,10 @@ public class FridayPlugin extends Plugin {
                     }
 
 
-                    MessageToSend message = new MessageToSend(getGreetingText(), chat.chatId());
+                    MessageToSend message = new MessageToSend(getGreetingText(), chat);
                     marvin.message().send(message);
 
-                    marvin.pluginOptions().chat(chat.chatId()).set(LAST_GREET_KEY, today.toString());
+                    marvin.pluginOptions().chat(chat).set(LAST_GREET_KEY, today.toString());
                 }
             } catch (Exception e) {
                 logger.catching(e);

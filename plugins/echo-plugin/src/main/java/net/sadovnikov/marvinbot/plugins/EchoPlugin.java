@@ -10,6 +10,7 @@ import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.domain.user.ChatModeratorRole;
 import net.sadovnikov.marvinbot.core.plugin.Plugin;
 import net.sadovnikov.marvinbot.core.plugin.PluginException;
+import net.sadovnikov.marvinbot.core.service.chat.AbstractChat;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,13 +32,13 @@ public class EchoPlugin extends Plugin {
 
         public void handle(MessageEvent ev) throws PluginException {
 
-            String chatId  = ev.getMessage().chatId();
+            AbstractChat chat  = ev.getMessage().chat();
             String msgText = ev.getMessage().text();
             try {
-                boolean isEchoingOn = marvin.pluginOptions().chat(chatId).get("enableEcho", "off").equals("on");
+                boolean isEchoingOn = marvin.pluginOptions().chat(chat).get("enableEcho", "off").equals("on");
                 boolean isCommand   = ev.getMessage().isCommand(); // is message a valid bot command
                 if (isEchoingOn && !isCommand) {
-                    MessageToSend message = new MessageToSend(msgText, chatId);
+                    MessageToSend message = new MessageToSend(msgText, chat);
                     marvin.message().send(message);
                 }
             } catch (DbException | MessageSenderException e) {
@@ -61,14 +62,14 @@ public class EchoPlugin extends Plugin {
             if (args.length == 0) {
                 return;
             }
-            String chatId = ev.getMessage().chatId();
+            AbstractChat chat = ev.getMessage().chat();
 
             try {
                 if ( args[0].equals("on")) {
-                    marvin.pluginOptions().chat(chatId).set("enableEcho", "on");
+                    marvin.pluginOptions().chat(chat).set("enableEcho", "on");
                     marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("echoTurnedOn"));
                 } else if ( args[0].equals("off")) {
-                    marvin.pluginOptions().chat(chatId).set("enableEcho", "off");
+                    marvin.pluginOptions().chat(chat).set("enableEcho", "off");
                     marvin.message().reply(ev.getMessage(), getLocaleBundle().getString("echoTurnedOff"));
                 }
             } catch (MessageSenderException | DbException e) {
