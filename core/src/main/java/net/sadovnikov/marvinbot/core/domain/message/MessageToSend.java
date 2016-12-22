@@ -13,7 +13,6 @@ public class MessageToSend extends Message {
 
     private AbstractChat chat;
     private Set<Attachment> attachments = new HashSet<>();
-    private Channel channel;
 
     public MessageToSend(String text, AbstractChat chat) {
         this.text = text;
@@ -26,10 +25,6 @@ public class MessageToSend extends Message {
 
     public String text() {
         return this.text;
-    }
-
-    public Channel channel() {
-        return this.channel;
     }
 
     public Set<Attachment> attachments() {

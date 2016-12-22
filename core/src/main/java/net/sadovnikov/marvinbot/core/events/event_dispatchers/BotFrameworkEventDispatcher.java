@@ -49,16 +49,20 @@ public class BotFrameworkEventDispatcher extends EventDispatcher {
             Command cmd = parser.parse(text);
 
             net.sadovnikov.marvinbot.core.domain.Channel channel = new net.sadovnikov.marvinbot.core.domain.Channel(
-                ChannelTypes.valueOf(event.channel().type().name())
+                ChannelTypes.valueOf(event.channel().type().name().toUpperCase())
             );
-            ReceivedMessage message = new ReceivedMessage(new Chat(channel, event.conversation().id()), userName, text, cmd);
+            Chat chat = new Chat(channel, event.conversation().id());
+            if (event.conversation().isGroup()) {
+                chat = new GroupChat(channel, chatId);
+            }
+            ReceivedMessage message = new ReceivedMessage(chat, userName, text, cmd);
             logger.info("new message from " + chatId + ": " + message.text());
 
             dispatch(new MessageEvent(message));
 
         }).on(EventTypes.EVENT_TYPE_CONVERSATION_UPDATE, (ConversationUpdate event) -> {
             List<Address> membersRemoved = event.membersRemoved();
-            List<Address> membersAdded   = event.membersRemoved();
+            List<Address> membersAdded   = event.membersAdded();
             Address recepient = event.recipient();
             Channel mbfChannel = event.channel();
             net.sadovnikov.marvinbot.core.domain.Channel channel = new net.sadovnikov.marvinbot.core.domain.Channel(
@@ -71,13 +75,6 @@ public class BotFrameworkEventDispatcher extends EventDispatcher {
             }
             logger.info("new conversationUpdateEvent from " + event.conversation().id());
 
-
-            /**
-             * Bot's username is different for every channel and we can't know it advance.
-             * So, we'll try to get it from RECEPIENT field of message.
-             * Than the bot needs to remember he belongs to this chat, since there is not way to get active chats list from API
-             */
-            BotFrameworkContactManager contactManager = injector.getInstance(BotFrameworkContactManager.class);
             if (membersAdded.contains(recepient)) {
                 dispatch(new BotJoinedChatEvent(chat));
                 logger.info("bot joined chat " + chat.chatId());

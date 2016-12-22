@@ -98,18 +98,18 @@ public class PluginChatOption extends GlobalPluginOption {
     protected Document createOption(String name, Object value) {
         Document doc = super.createOption(name, value);
         doc.put("chatId", chat.chatId());
-        doc.put("channel", chat.channel());
+        doc.put("channel", chat.channel().id());
         return doc;
     }
 
     @Override
     protected Bson makeSearchByNameQuery(String optName) {
-        return and(eq("pluginName", pluginName), eq("chatId", chat.channel()), eq("channel", chat.channel()), eq("name", optName));
+        return and(eq("pluginName", pluginName), eq("chatId", chat.chatId()), eq("channel", chat.channel().id()), eq("name", optName));
     }
 
     @Override
     protected Bson makeGetAllQuery() {
-        return and(eq("pluginName", pluginName), eq("chatId", chat.channel()), eq("channel", chat.channel()));
+        return and(eq("pluginName", pluginName), eq("chatId", chat.chatId()), eq("channel", chat.channel().id()));
     }
 
     @Override

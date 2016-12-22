@@ -9,6 +9,11 @@ import net.sadovnikov.marvinbot.core.service.chat.Chat;
 import net.sadovnikov.marvinbot.core.service.contact.CachingContactManager;
 import ro.fortsoft.pf4j.Extension;
 
+/**
+ * In Microsoft Bot Framework Bot's username is different for every channel and we can't know it advance.
+ * So, we'll try to get it from RECEPIENT field of message.
+ * Than the bot needs to remember he belongs to this chat, since there is not way to get active chats list from API
+ */
 public class ChatCachingOnChatEvents {
 
     @Extension
