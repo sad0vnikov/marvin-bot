@@ -54,11 +54,23 @@ public class Main {
             return;
         }
 
-        String appId     = config.getParam("marvinBot.appId");
-        String appSecret = config.getParam("marvinBot.secret");
+        String appId     = config.getParam("marvinBot.botframework.appId");
+        String appSecret = config.getParam("marvinBot.botframework.secret");
+        String isEmulatorParam = config.getParam("marvinBot.botframework.emulator");
+        boolean isEmulator = false;
+        if (isEmulatorParam != null && isEmulatorParam.equals("true")) {
+            isEmulator = true;
+        }
 
 
         BotFrameworkClient client = new BotFrameworkClient(appId, appSecret);
+
+        if (isEmulator) {
+            String emulatorHost = config.getParam("marvinBot.botframework.emulator.host");
+            int emulatorPort = Integer.valueOf(config.getParam("marvinBot.botframework.emulator.port"));
+            client.useEmulator(emulatorHost, emulatorPort);
+        }
+
         Injector injector = Guice.createInjector(
                 new BotFrameworkInjector(client.getBotInstance()),
                 new PluginManagerInjector(),
