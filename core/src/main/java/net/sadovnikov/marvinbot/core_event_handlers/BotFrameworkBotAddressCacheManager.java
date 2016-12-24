@@ -30,6 +30,6 @@ public class BotFrameworkBotAddressCacheManager {
 
         ChannelTypes channelType = ChannelTypes.valueOf(ev.channel().type().name());
         Channel channel = new Channel(channelType);
-        cachingService.saveBotIdForChannel(channel, ev.recipient().id());
+        cachingService.saveBotAddressForChannel(channel, ev.recipient());
     }
 }

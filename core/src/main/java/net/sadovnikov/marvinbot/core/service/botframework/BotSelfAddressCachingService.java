@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.mongodb.client.MongoCollection;
 import net.sadovnikov.marvinbot.core.db.DbService;
 import net.sadovnikov.marvinbot.core.domain.Channel;
+import net.sadovnikov.mbf4j.Address;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +27,13 @@ public class BotSelfAddressCachingService {
         this.dbService = dbService;
     }
 
-    public void saveBotIdForChannel(Channel channel, String botId) {
-        Document docToInsert = new Document().append("channel_id", channel.id()).append("bot_id", botId);
+    public void saveBotAddressForChannel(Channel channel, Address address) {
+        Document docToInsert = new Document().append("channel_id", channel.id())
+                .append("bot_id", address.id())
+                .append("bot_name", address.name());
 
-        logger.debug("setting bot id = " + botId + " for channel " + channel.id());
-        if (getBotIdForChannel(channel).isPresent()) {
+        logger.debug("setting bot id = " + address.id() + " for channel " + channel.id());
+        if (getBotAddressForChannel(channel).isPresent()) {
             Document findCriteria = new Document().append("channel_id", channel.id());
             getCollection().replaceOne(findCriteria, docToInsert);
         } else {
@@ -39,14 +42,18 @@ public class BotSelfAddressCachingService {
 
     }
 
-    public Optional<String> getBotIdForChannel(Channel channel) {
+    public Optional<Address> getBotAddressForChannel(Channel channel) {
         Document findCriteria = new Document().append("channel_id", channel.id());
         Document result = getCollection().find(findCriteria).first();
         if (result == null) {
             return Optional.empty();
         }
 
-        return Optional.of((String)result.get("bot_id"));
+        String botId = (String)result.get("bot_id");
+        String botName = (String) result.get("bot_name");
+        Address address = new Address(botId, botName);
+
+        return Optional.of(address);
 
     }
 

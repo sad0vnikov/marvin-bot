@@ -11,8 +11,6 @@ import net.sadovnikov.mbf4j.Bot;
 import net.sadovnikov.mbf4j.Channel;
 import net.sadovnikov.mbf4j.http.Conversation;
 import net.sadovnikov.mbf4j.http.HttpException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
@@ -40,12 +38,11 @@ public class BotFrameworkMessageSenderService extends MessageSenderService {
                         new Conversation(message.chat().chatId(), "", message.chat().isGroupChat()),
                         message.text()
                 );
-                Optional<String> botId = botAddressCachingService.getBotIdForChannel(message.chat().channel());
-                if (!botId.isPresent()) {
+                Optional<Address> from = botAddressCachingService.getBotAddressForChannel(message.chat().channel());
+                if (!from.isPresent()) {
                     throw new MessageSenderException("cannot find bot id for channel " + message.chat().channel().id());
                 }
-                Address from = new Address(botId.get(), "");
-                mbfMessage.withFrom(from);
+                mbfMessage.withFrom(from.get());
                 net.sadovnikov.mbf4j.activities.outcoming.SentMessage sentMessage = bot.messageSender().send(mbfMessage);
                 return new SentMessage(sentMessage.id(), message.chat(), message.text());
 
