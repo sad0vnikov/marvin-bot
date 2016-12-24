@@ -10,6 +10,7 @@ import net.sadovnikov.marvinbot.core.config.ConfigException;
 import net.sadovnikov.marvinbot.core.config.ConfigLoader;
 import net.sadovnikov.marvinbot.core.db.MongoDbService;
 import net.sadovnikov.marvinbot.core.events.EventDispatcher;
+import net.sadovnikov.marvinbot.core_event_handlers.BotFrameworkBotAddressCacheManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,6 +66,12 @@ public class Main {
                 new net.sadovnikov.marvinbot.core.injection.Db(dbService),
                 new LoggerInjector(logger)
         );
+
+        //every outcoming bot event needs to have 'from' field with bot id
+        //but there is no way to get bot id in advance, so we set up a component which will get bot id from incoming events
+        //and cache it
+        BotFrameworkBotAddressCacheManager botAddressCaching = injector.getInstance(BotFrameworkBotAddressCacheManager.class);
+        botAddressCaching.initCaching(client);
 
         client.connect();
 

@@ -1,5 +1,7 @@
 package net.sadovnikov.marvinbot.core.service.client;
 
+import net.sadovnikov.marvinbot.core.service.botframework.BotSelfAddressCachingService;
+import net.sadovnikov.marvinbot.core_event_handlers.BotFrameworkBotAddressCacheManager;
 import net.sadovnikov.mbf4j.Bot;
 import net.sadovnikov.mbf4j.http.api.emulator.EmulatorApiRequestFactory;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +17,7 @@ public class BotFrameworkClient extends Client {
     public BotFrameworkClient(String appId, String secret) {
         bot = new Bot();
         bot
-                .setApiRequestFactory(new EmulatorApiRequestFactory("localhost", 59965))
+                .setApiRequestFactory(new EmulatorApiRequestFactory("localhost", 65181))
                 .setCredentials(appId, secret);
     }
 
