@@ -40,11 +40,11 @@ public class HelpCommand extends CommandExecutor {
         StringBuilder help = new StringBuilder();
 
         help.append(locData.getString("helpHeader"));
-        help.append("\n");
+        help.append("  \n");
         for (CommandExecutor executor : cmdExecutors) {
             if (executor.getClass().isAnnotationPresent(Command.class)) {
                 help.append(getHelpStringFromCommandExecutor(executor));
-                help.append("\n");
+                help.append("  \n");
             }
         }
 
