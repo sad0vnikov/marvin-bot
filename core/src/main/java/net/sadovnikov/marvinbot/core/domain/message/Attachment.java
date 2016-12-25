@@ -4,22 +4,26 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.nio.file.Files;
 
 public class Attachment {
 
     private File file;
     private String fileName;
     private byte[] bytes;
+    private String mime;
 
 
-    public Attachment(File file) {
+    public Attachment(File file) throws IOException {
         this.file = file;
         this.fileName = file.getName();
+        this.mime = Files.probeContentType(file.toPath());
     }
 
-    public Attachment(byte[] bytes, String fileName) {
+    public Attachment(byte[] bytes, String mimeType, String fileName) {
         this.bytes = bytes;
         this.fileName = fileName;
+        this.mime = mimeType;
     }
 
     public File file() throws FileNotFoundException {
@@ -43,6 +47,10 @@ public class Attachment {
         }
 
         return bytes;
+    }
+
+    public String mimeType() {
+        return this.mime;
     }
 
     protected byte[] getBytesFromFile() throws FileNotFoundException, IOException {

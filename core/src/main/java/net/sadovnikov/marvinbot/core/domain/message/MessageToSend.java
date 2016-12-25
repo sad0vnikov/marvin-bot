@@ -6,6 +6,7 @@ import net.sadovnikov.marvinbot.core.service.chat.AbstractChat;
 import net.sadovnikov.marvinbot.core.service.chat.Chat;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,20 +32,20 @@ public class MessageToSend extends Message {
         return this.attachments;
     }
 
-    public void addFile(File file) {
+    public void addFile(File file) throws IOException {
         attachments.add(new Attachment(file));
     }
 
-    public void addFile(byte[] file, String name) {
-        attachments.add(new Attachment(file, name));
+    public void addFile(byte[] file, String mime, String name) {
+        attachments.add(new Attachment(file, mime, name));
     }
 
-    public void addImage(File file) {
+    public void addImage(File file) throws IOException {
         attachments.add(new ImageAttachment(file));
     }
 
-    public void addImage(byte[] file, String imageName) {
-        attachments.add(new ImageAttachment(file, imageName));
+    public void addImage(byte[] file, String mime, String imageName) {
+        attachments.add(new ImageAttachment(file, mime, imageName));
     }
 
     public boolean equals(MessageToSend message) {

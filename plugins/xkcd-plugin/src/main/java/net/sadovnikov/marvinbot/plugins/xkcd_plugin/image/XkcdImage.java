@@ -11,4 +11,6 @@ public interface XkcdImage {
     public int num();
 
     public String description();
+
+    public String mimeType();
 }

@@ -56,7 +56,7 @@ public class XkcdPlugin extends Plugin {
 
         String imageDesc = image.description();
         MessageToSend msg = new MessageToSend(imageDesc, chat);
-        msg.addImage(imageBytes, image.name());
+        msg.addImage(imageBytes, image.mimeType(), image.name());
 
         try {
             marvin.message().send(msg);

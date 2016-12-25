@@ -35,4 +35,9 @@ public class RandomXkcdImage implements XkcdImage{
     public String description() {
         return image.description();
     }
+
+    @Override
+    public String mimeType() {
+        return image.mimeType();
+    }
 }

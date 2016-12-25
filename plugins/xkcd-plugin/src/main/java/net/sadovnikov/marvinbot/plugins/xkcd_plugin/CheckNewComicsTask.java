@@ -30,7 +30,7 @@ public class CheckNewComicsTask extends Task {
             String lastShownImageNum = marvin.pluginOptions().chat(chat).get("last_shown_comics_num");
             if (lastShownImageNum == null || imageNum > Integer.parseInt(lastShownImageNum)) {
                 MessageToSend msg = new MessageToSend(lastImage.description(), chat);
-                msg.addImage(lastImage.bytes(), lastImage.name());
+                msg.addImage(lastImage.bytes(), lastImage.mimeType(), lastImage.name());
 
                 marvin.message().send(msg);
             }

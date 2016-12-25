@@ -24,6 +24,7 @@ public class LastXkcdImage implements XkcdImage {
     protected Long num;
     protected URL imageUrl;
     protected String description;
+    protected String mime;
 
     /**
      * The newest image will be loaded
@@ -88,6 +89,11 @@ public class LastXkcdImage implements XkcdImage {
         loadFile();
     }
 
+    @Override
+    public String mimeType() {
+        return this.mime;
+    }
+
     protected byte[] loadFile() throws IOException {
         String[] urlParts = this.imageUrl.getPath().split("/");
         String fileName = urlParts[urlParts.length - 1];
@@ -96,8 +102,10 @@ public class LastXkcdImage implements XkcdImage {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         URL url = this.imageUrl;
 
-
-        try (InputStream in = url.openStream()) {
+        URLConnection conn = url.openConnection();
+        this.mime = conn.getContentType();
+        
+        try (InputStream in = conn.getInputStream()) {
             byte[] buffer = new byte[1024];
             int n = 0;
             while ((n = in.read(buffer)) != -1) {
@@ -107,5 +115,4 @@ public class LastXkcdImage implements XkcdImage {
 
         return baos.toByteArray();
     }
-
 }
