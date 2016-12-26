@@ -1,5 +1,7 @@
 # Marvin the Skype bot
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eccc5039101e4f65ab3daa833a924a63)](https://www.codacy.com/app/alex_35/marvin-bot?utm_source=github.com&utm_medium=referral&utm_content=sad0vnikov/marvin-bot&utm_campaign=badger)
+
 This is my project I started for practicing Java. Marvin is a simple Skype bot which as for now can:
 - Notify about new git commits to the master branch. Only Bitbucket webhooks are supported for now.
 - Send you new Xkcd comics each time they are published
