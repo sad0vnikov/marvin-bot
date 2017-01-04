@@ -16,9 +16,12 @@ public class BotFrameworkClient extends Client {
 
     public BotFrameworkClient(String appId, String secret) {
         bot = new Bot();
-        bot
-                .setCredentials(appId, secret);
-    }
+        if (appId != null && secret != null) {
+            bot
+                    .setCredentials(appId, secret);
+        }
+
+    } 
 
     public BotFrameworkClient useEmulator(String emulatorHost, int emulatorPort) {
         bot.setApiRequestFactory(new EmulatorApiRequestFactory(emulatorHost, emulatorPort));
