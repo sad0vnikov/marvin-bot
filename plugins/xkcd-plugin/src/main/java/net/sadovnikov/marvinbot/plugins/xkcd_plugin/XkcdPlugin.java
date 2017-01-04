@@ -1,6 +1,5 @@
 package net.sadovnikov.marvinbot.plugins.xkcd_plugin;
 
-import net.sadovnikov.marvinbot.core.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.db.DbException;
 import net.sadovnikov.marvinbot.core.domain.Command;
 import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
@@ -71,7 +70,6 @@ public class XkcdPlugin extends Plugin {
     }
 
     @net.sadovnikov.marvinbot.core.annotations.Command("xkcd")
-    @RequiredRole(UserRole.class)
     @Extension
     public class XkcdCommand extends CommandExecutor {
 

@@ -4,7 +4,6 @@ import net.sadovnikov.marvinbot.core.db.DbException;
 import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
 import net.sadovnikov.marvinbot.core.service.CommandExecutor;
 import net.sadovnikov.marvinbot.core.annotations.Command;
-import net.sadovnikov.marvinbot.core.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.events.EventHandler;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.domain.user.ChatModeratorRole;
@@ -50,7 +49,6 @@ public class EchoPlugin extends Plugin {
     }
 
     @Command("echo")
-    @RequiredRole(ChatModeratorRole.class)
     @Extension
     public class SwitcherCommand extends CommandExecutor {
 

@@ -3,7 +3,6 @@ package net.sadovnikov.marvinbot.plugins;
 
 import net.sadovnikov.marvinbot.core.domain.Command;
 import net.sadovnikov.marvinbot.core.service.CommandExecutor;
-import net.sadovnikov.marvinbot.core.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.domain.message.ReceivedMessage;
 import net.sadovnikov.marvinbot.core.domain.user.UserRole;
@@ -30,7 +29,6 @@ public class  PingCommand extends Plugin {
 
     @net.sadovnikov.marvinbot.core.annotations.Command("ping")
     @Extension
-    @RequiredRole(UserRole.class)
     public class PingCommandHandler extends CommandExecutor {
 
         private ResourceBundle locData;

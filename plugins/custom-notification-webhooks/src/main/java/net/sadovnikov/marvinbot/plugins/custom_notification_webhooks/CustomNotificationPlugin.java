@@ -1,7 +1,6 @@
 package net.sadovnikov.marvinbot.plugins.custom_notification_webhooks;
 
 import net.sadovnikov.marvinbot.core.annotations.Command;
-import net.sadovnikov.marvinbot.core.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
 import net.sadovnikov.marvinbot.core.domain.user.ChatModeratorRole;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
@@ -92,7 +91,6 @@ public class CustomNotificationPlugin extends Plugin {
 
     @Extension
     @Command("notification-types")
-    @RequiredRole(ChatModeratorRole.class)
     public class SetChatNotificationsTypes extends CommandExecutor {
 
         @Override

@@ -11,7 +11,6 @@ import net.sadovnikov.marvinbot.core.db.DbException;
 import net.sadovnikov.marvinbot.core.domain.message.MessageToSend;
 import net.sadovnikov.marvinbot.core.service.CommandExecutor;
 import net.sadovnikov.marvinbot.core.annotations.Command;
-import net.sadovnikov.marvinbot.core.annotations.RequiredRole;
 import net.sadovnikov.marvinbot.core.events.event_types.MessageEvent;
 import net.sadovnikov.marvinbot.core.domain.user.ChatModeratorRole;
 import net.sadovnikov.marvinbot.core.plugin.Plugin;
@@ -86,7 +85,6 @@ public class GitNotifierPlugin extends Plugin {
 
     @Extension
     @Command("git-notifier")
-    @RequiredRole(ChatModeratorRole.class)
     public class AddNotifierCommand extends CommandExecutor {
 
 
