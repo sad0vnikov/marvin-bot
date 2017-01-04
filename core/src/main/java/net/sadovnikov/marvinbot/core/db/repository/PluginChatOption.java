@@ -99,6 +99,7 @@ public class PluginChatOption extends GlobalPluginOption {
         Document doc = super.createOption(name, value);
         doc.put("chatId", chat.chatId());
         doc.put("channel", chat.channel().id());
+        doc.put("isGroup", false);
         return doc;
     }
 

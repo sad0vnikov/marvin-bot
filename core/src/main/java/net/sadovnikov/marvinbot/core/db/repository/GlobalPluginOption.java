@@ -26,6 +26,7 @@ public class GlobalPluginOption extends PluginOption {
         doc.append("pluginName", pluginName);
         doc.append("name", name);
         doc.append("value", value);
+        doc.append("isGroup", true);
 
         return doc;
     }
