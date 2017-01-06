@@ -14,8 +14,6 @@ import net.sadovnikov.marvinbot.core.service.contact.CachingContactManager;
 import net.sadovnikov.marvinbot.core.service.contact.ContactManager;
 import net.sadovnikov.marvinbot.core.service.message.BotFrameworkMessageSenderService;
 import net.sadovnikov.marvinbot.core.service.message.MessageSenderService;
-import net.sadovnikov.marvinbot.core.service.permissions.PermissionChecker;
-import net.sadovnikov.marvinbot.core.service.permissions.Skype4jPermissionChecker;
 import net.sadovnikov.mbf4j.Bot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
