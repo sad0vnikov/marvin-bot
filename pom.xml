@@ -7,7 +7,7 @@
     <groupId>net.sadovnikov.marvin-skype-bot</groupId>
     <artifactId>marvin-skype-bot</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 
     <build>
         <resources>
