@@ -10,6 +10,9 @@ services:
         links:
             - marvin-db
         env_file: config.env
+        networks:
+          - marvin
+          - marvin-mongo
 
     marvin-db:
         image: mongo
@@ -18,3 +21,10 @@ services:
           - ./db:/data/db
         ports:
           - "27017:27017"
+        networks:
+          - marvin-mongo
+networks:
+  marvin:
+    driver: bridge
+  marvin-mongo:
+    driver: bridge
