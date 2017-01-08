@@ -1,4 +1,4 @@
-FROM ibmjava:8
+FROM openjdk:8
 ADD ./core/target/marvin-core-0.2.0/ /app
 VOLUME /app
 WORKDIR /app
